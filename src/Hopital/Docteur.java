@@ -9,6 +9,23 @@ package Hopital;
  *
  * @author Fort
  */
-public class Docteur {
+public class Docteur extends Employé{
     
+    private String spécialité;
+ 
+    
+    public Docteur()
+    {
+        
+    }
+    
+    public String getSpécialité() {
+        return spécialité;
+    }
+
+    public void setSpécialité(String spécialité) {
+        this.spécialité = spécialité;
+    }
+    
+   
 }

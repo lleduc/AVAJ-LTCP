@@ -9,6 +9,29 @@ package Hopital;
  *
  * @author Fort
  */
-public class Infirmier {
+public class Infirmier extends Employé {
+    
+   private String code_service;
+   private String rotation;
+   private float salaire;
+    
+    public Infirmier()
+    {
+        
+    }
+
+    public String getCode_service() {
+        return code_service;
+    }
+
+    public String getRotation() {
+        return rotation;
+    }
+
+    public float getSalaire() {
+        return salaire;
+    }
+
+    
     
 }
