@@ -3,15 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Test;
+package Requete;
+import Hopital.*;
 
 /**
  *
  * @author loulou
  */
-public class Main {
-    public static void main(String[] args) {
-        
-    }
+public class REmp {
+    
+  // add("SELECT * FROM Docteur;");
+    
     
 }

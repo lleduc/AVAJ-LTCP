@@ -5,6 +5,8 @@
  */
 package premier.essai.graphique;
 
+import Connexion.*;
+import java.sql.SQLException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -31,7 +33,12 @@ public class PremierEssaiGraphique extends Application {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+        private String usernameECE="lleduc";
+        private String passwordECE="LL-30elise";
+        private String loginDatabase = "lleduc-rw";
+        private String passwordDatabase= "T2buw8os";
+        Connexion conn = new Connexion(usernameECE,passwordECE,loginDatabase,passwordDatabase);
         launch(args);
     }
     
