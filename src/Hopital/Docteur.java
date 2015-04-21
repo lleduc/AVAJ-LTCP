@@ -9,7 +9,7 @@ package Hopital;
  *
  * @author Fort
  */
-public class Docteur extends Employé{
+public class Docteur extends Employe{
     
     private String spécialité;
  

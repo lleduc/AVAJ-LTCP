@@ -10,7 +10,7 @@ package Hopital;
  *
  * @author raulin
  */
-public class Bâtiment {
+public class Batiment {
     
     int no_Batiment;    
 }

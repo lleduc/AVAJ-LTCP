@@ -57,80 +57,10 @@ public class Connexion {
             // création d'un ordre SQL (statement)
             stmt = conn.createStatement();
 
-            // initialisation de la liste des requetes de selection et de MAJ
-            //remplirRequetes();
-            //remplirRequetesMaj();
+            
         }
     }
-
-    /**
-     * Méthode privée qui ajoute la requete de selection en parametre dans son ArrayList
-     */
-    private void ajouterRequete(String requete) {
-        requetes.add(requete);
-    }
-
-    /**
-     * Méthode privée qui initialise la liste des requetes de selection
-     */
-    /*private void remplirRequetes() {
-    ajouterRequete("SELECT ename, sal FROM Emp ORDER BY sal;");
-    ajouterRequete("SELECT Dept.*, Emp.*, Mission.* FROM Dept, Emp, Mission WHERE Dept.deptno=Emp.deptno AND Emp.empno=Mission.empno;");
-    ajouterRequete("SELECT AVG (Emp.sal) FROM Emp, Mission WHERE Emp.empno = Mission.empno;");
-    ajouterRequete("SELECT Dept.*, Emp.* FROM Dept, Emp WHERE Dept.deptno=Emp.deptno AND comm>0;");
-    ajouterRequete("SELECT hiredate, empno, ename FROM Emp WHERE (((hiredate)>='1981-05-01' And (hiredate)<'1981-05-31'))ORDER BY hiredate;");
-    ajouterRequete("SELECT ename, job FROM Emp ORDER BY job;");
-    ajouterRequete("SELECT DISTINCT dname, job FROM Dept, Emp WHERE Dept.deptno=Emp.deptno AND job='Clerk';");
-    }*/
-
-    /**
-     * Méthode privée qui ajoute la requete de MAJ en parametre dans son ArrayList
-     */
-    /*private void ajouterRequeteMaj(String requete) {
-    requetesMaj.add(requete);
-    }*/
-
-    /**
-     * Méthode privée qui initialise la liste des requetes de MAJ
-     */
-    /*private void remplirRequetesMaj() {
-    // Requêtes d'insertion
-    ajouterRequeteMaj("INSERT INTO Dept (deptno,dname,loc) VALUES (50,'ECE','Paris');");
     
-    // Requêtes de modification
-    ajouterRequeteMaj("UPDATE Dept SET loc='Eiffel' WHERE loc='Paris';");
-    
-    // Requêtes de suppression
-    ajouterRequeteMaj("DELETE FROM Dept WHERE loc='Eiffel';");
-    
-    }*/
-
-    /**
-     * Méthode qui retourne l'ArrayList des champs de la table en parametre
-     *
-     */
-    /*public ArrayList remplirChampsTable(String table) throws SQLException {
-    // récupération de l'ordre de la requete
-    rset = stmt.executeQuery("select * from " + table);
-    
-    // récupération du résultat de l'ordre
-    rsetMeta = rset.getMetaData();
-    
-    // calcul du nombre de colonnes du resultat
-    int nbColonne = rsetMeta.getColumnCount();
-    
-    // creation d'une ArrayList de String
-    ArrayList<String> liste;
-    liste = new ArrayList<String>();
-    
-    // Ajouter tous les champs du resultat dans l'ArrayList
-    for (int i = 0; i < nbColonne; i++) {
-    liste.add(rsetMeta.getColumnLabel(i + 1));
-    }
-    
-    // Retourner l'ArrayList
-    return liste;
-    }*/
 
     /**
      * Methode qui retourne l'ArrayList des champs de la requete en parametre
@@ -168,12 +98,5 @@ public class Connexion {
 
         // Retourner l'ArrayList
         return liste;
-    }
-
-    /**
-     * Méthode qui execute une requete de MAJ en parametre
-     */
-    public void executeUpdate(String requeteMaj) throws SQLException {
-        stmt.executeUpdate(requeteMaj);
     }
 }

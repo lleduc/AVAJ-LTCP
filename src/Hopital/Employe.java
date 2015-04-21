@@ -9,7 +9,7 @@ package Hopital;
  *
  * @author Fort
  */
-public class Employé {
+public class Employe {
     private int numéro;
     private String nom;
     private String prénom;
@@ -18,7 +18,7 @@ public class Employé {
 
     
     
-    public Employé()
+    public Employe()
     {
         
     }
