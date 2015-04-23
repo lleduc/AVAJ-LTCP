@@ -6,11 +6,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="169.0" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="projet.info.pkg3.PopupsaisienumeroController">
+<AnchorPane id="AnchorPane" prefHeight="121.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="projet.info.pkg3.PopupsaisienumeroController">
    <children>
-      <Label layoutX="21.0" layoutY="65.0" text="Veuillez n'utilisez que des chifres pour le numéro" />
-      <Button layoutX="134.0" layoutY="113.0" mnemonicParsing="false" text="Ok" />
+      <Label layoutX="21.0" layoutY="65.0" text="Veuillez n'utilisez que des chiffres pour le numéro." />
       <Label layoutX="116.0" layoutY="28.0" text="ATTENTION :" />
    </children>
 </AnchorPane>

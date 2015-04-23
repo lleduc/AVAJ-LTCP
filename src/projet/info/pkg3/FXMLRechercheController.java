@@ -30,6 +30,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
@@ -41,6 +42,8 @@ import javafx.stage.Stage;
 public class FXMLRechercheController extends ProjetInfo3 implements Initializable {
 
     //Variables de la fenêtre de recherche
+    @FXML
+    public Stage popup;
     @FXML
     private TextField searchBar;
     @FXML
@@ -349,76 +352,87 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
      }*/
     @FXML
     public void actionTF(TextField type, Personne personne) {
-        if (type.getLength() > 0) {
-            if (type.equals(nom)) {
-                personne.setNom(type.getText());
-                System.out.println(personne.getNom());
-            } else if (type.equals(prenom)) {
-                personne.setPrenom(type.getText());
-                System.out.println(personne.getPrenom());
-            } else if (type.equals(numero)) {
-                personne.setNumero(Integer.parseInt(type.getText()));
-                System.out.println(personne.getNumero());
-            }
+        if (type.equals(nom)) {
+            personne.setNom(type.getText());
+            System.out.println(personne.getNom());
+        } else if (type.equals(prenom)) {
+            personne.setPrenom(type.getText());
+            System.out.println(personne.getPrenom());
+        } else if (type.equals(numero)) {
+            personne.setNumero(Integer.parseInt(type.getText()));
+            System.out.println(personne.getNumero());
+        }
+    }
 
+    public void actionTFNumero(KeyEvent event) {
+        if (numero.getLength() > 0) {
+            if (numero.getText().matches("\\d+")) {
+                if (type.getValue().equalsIgnoreCase("docteur")) {
+                    actionTF(numero, docteur);
+                } else if (type.getValue().equalsIgnoreCase("infirmier")) {
+                    actionTF(numero, infirmier);
+                } else if (type.getValue().equalsIgnoreCase("malade")) {
+                    actionTF(numero, malade);
+                }
+            } else {
+                popup();
+                numero.setText("");
+            }
+        } else {
+            System.out.println("pas de numero");
+        }
+    }
+
+    public void actionTFnom(KeyEvent event) {
+        if (numero.getLength() > 0) {
+            if (type.getValue().equalsIgnoreCase("docteur")) {
+                actionTF(nom, docteur);
+            } else if (type.getValue().equalsIgnoreCase("infirmier")) {
+                actionTF(nom, infirmier);
+            } else if (type.getValue().equalsIgnoreCase("malade")) {
+                actionTF(nom, malade);
+            }
         } else {
             System.out.println("pas de nom");
         }
     }
 
-    public void actionTFNumero(KeyEvent event) {
-
-        if (numero.getText().matches("\\d+")) {
+    public void actionTFPrenom(KeyEvent event) {
+        if (numero.getLength() > 0) {
             if (type.getValue().equalsIgnoreCase("docteur")) {
-                actionTF(numero, docteur);
+                actionTF(prenom, docteur);
             } else if (type.getValue().equalsIgnoreCase("infirmier")) {
-                actionTF(numero, infirmier);
+                actionTF(prenom, infirmier);
             } else if (type.getValue().equalsIgnoreCase("malade")) {
-                actionTF(numero, malade);
+                actionTF(prenom, malade);
             }
         } else {
-            try {
+            System.out.println("pas de prenom");
+        }
+    }
+    
+    public void popup() {
+        try {
 
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(ProjetInfo3.class.getResource("Popupsaisienumero.fxml"));
-                AnchorPane page = (AnchorPane) loader.load();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(ProjetInfo3.class.getResource("Popupsaisienumero.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
 
-                Stage popup = new Stage();
-                popup.setTitle("message d'erreur");
-                //dialogStage.initModality(Modality.WINDOW_MODAL);
-                popup.initOwner(primaryStage);
-                Scene scene = new Scene(page);
-                popup.setScene(scene);
+            popup = new Stage();
+            popup.setTitle("Message d'erreur");
+            popup.initModality(Modality.WINDOW_MODAL);
+            popup.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            popup.setScene(scene);
 
-        //PopupsaisienumeroController controller = loader.getController();
+            PopupsaisienumeroController controleur = loader.getController();
                 //controller.setDialogStage(popup);
-                //controller.setPerson(person);
-                // Show the dialog and wait until the user closes it
-                popup.show();//AndWait();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+            //controller.setPerson(person);
+            // Show the dialog and wait until the user closes it
+            popup.showAndWait();
 
-    }
-
-    public void actionTFnom(KeyEvent event) {
-        if (type.getValue().equalsIgnoreCase("docteur")) {
-            actionTF(nom, docteur);
-        } else if (type.getValue().equalsIgnoreCase("infirmier")) {
-            actionTF(nom, infirmier);
-        } else if (type.getValue().equalsIgnoreCase("malade")) {
-            actionTF(nom, malade);
-        }
-    }
-
-    public void actionTFPrenom(KeyEvent event) {
-        if (type.getValue().equalsIgnoreCase("docteur")) {
-            actionTF(prenom, docteur);
-        } else if (type.getValue().equalsIgnoreCase("infirmier")) {
-            actionTF(prenom, infirmier);
-        } else if (type.getValue().equalsIgnoreCase("malade")) {
-            actionTF(prenom, malade);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
