@@ -67,7 +67,7 @@ public class Connexion {
      */
     public ArrayList remplirChampsRequete(String requete) throws SQLException {
         // récupération de l'ordre de la requete
-        rset = stmt.executeQuery(/*"SELECT nom FROM malade WHERE mutuelle LIKE 'LMDE';"*/requete);
+        rset = stmt.executeQuery(requete);
 
         // récupération du résultat de l'ordre
         rsetMeta = rset.getMetaData();

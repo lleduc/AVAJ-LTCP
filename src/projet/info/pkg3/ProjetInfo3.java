@@ -24,9 +24,8 @@ public class ProjetInfo3 extends Application {
     
     private Stage primaryStage;
     protected AnchorPane menu;
-    ///////////////////////////////////////
     public Connexion maconnexion;
-    ////////////////////////////////////////
+
     
     @Override
     public void start(Stage stage) throws Exception {
@@ -64,6 +63,7 @@ public class ProjetInfo3 extends Application {
     public static void main(String[] args) {
         //initConnection();
         launch(args);
+        System.exit(0);
     }
     
 }
