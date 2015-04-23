@@ -22,7 +22,7 @@ import jdbc2014.Connexion;
  */
 public class ProjetInfo3 extends Application {
     
-    private Stage primaryStage;
+    protected Stage primaryStage;
     protected AnchorPane menu;
     public Connexion maconnexion;
 

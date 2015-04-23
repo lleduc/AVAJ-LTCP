@@ -5,7 +5,8 @@
  */
 package projet.info.pkg3;
 
-
+import Hopital.*;
+import java.io.IOException;
 import jdbc2014.*;
 import java.net.URL;
 import java.sql.SQLException;
@@ -16,15 +17,21 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -51,7 +58,11 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
     ArrayList<String> liste = null;
     public String requete;
     /////////////////////////////////////////////////////////////////////
-    String nomTF = null;
+    //String nomTF = null;
+    //Employe  employe= new Employe();
+    Malade malade = new Malade();
+    Docteur docteur = new Docteur();
+    Infirmier infirmier = new Infirmier();
     ///////////////////////////////////////////////////////////////////////
 
     //Variables de malade dans recherche
@@ -171,6 +182,10 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
     public void initCBType() {
         listeCBType = FXCollections.observableArrayList("docteur", "infirmier", "malade");
         type.setItems(listeCBType);
+        ///////////////////////////////
+        //ajout thomas
+        type.setValue("Select Type");
+        /////////////////////////////////
     }
 
     public void initCBMutuelle() {
@@ -260,7 +275,7 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
             }
         });
     }
-    
+
     public void actionCBSpecialite() {
         specialite.setOnAction((event) -> {
             requete = specialite.getValue();
@@ -269,7 +284,7 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
 
                 requete = "SELECT DISTINCT e.nom , e.prenom\n"
                         + "FROM docteur d, employe e\n"
-                        + "WHERE e.no_employe = d.no_docteur AND d.specialite ='"+ specialite.getValue().substring(0, specialite.getValue().length() - 1) +"'\n"
+                        + "WHERE e.no_employe = d.no_docteur AND d.specialite ='" + specialite.getValue().substring(0, specialite.getValue().length() - 1) + "'\n"
                         + "ORDER BY nom\n";
                 liste = maconnexion.remplirChampsRequete(requete);
 
@@ -282,8 +297,6 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
             }
         });
     }
-    
-    
 
     public void actionCBType() {
         //////////////////////////////////////////////////////////////
@@ -322,29 +335,93 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
         // c'est juste le point de départ, tu n'as pas à te limiter à un seul sous programme
         // ce sous programme est appelé dans initConnection, après la connection à la bdd
     }
-    
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Sous programmes permettant d'additionner les différents critères de recherche afin de créer une requête
-    
-    public void actionTFnom(){
-        nom.setOnAction((event) -> {
-            String nomrecup=null;
-        if(nom.getLength() > 0 ){
-            nomrecup = nom.getText();
-            System.out.println(nomrecup);
-        }else System.out.println("pas de nom");
-        });
+    /*public void actionTFnom(){
+     nom.setOnAction((event) -> {
+     String nomrecup=null;
+     if(nom.getLength() > 0 ){
+     nomrecup = nom.getText();
+     System.out.println(nomrecup);
+     }else System.out.println("pas de nom");
+     });
+     }*/
+    @FXML
+    public void actionTF(TextField type, Personne personne) {
+        if (type.getLength() > 0) {
+            if (type.equals(nom)) {
+                personne.setNom(type.getText());
+                System.out.println(personne.getNom());
+            } else if (type.equals(prenom)) {
+                personne.setPrenom(type.getText());
+                System.out.println(personne.getPrenom());
+            } else if (type.equals(numero)) {
+                personne.setNumero(Integer.parseInt(type.getText()));
+                System.out.println(personne.getNumero());
+            }
+
+        } else {
+            System.out.println("pas de nom");
+        }
     }
 
-    @FXML
-    public void actionTFnomauto(KeyEvent event) {
-        if(nom.getLength() > 0 ){
-            nomTF = nom.getText();
-            System.out.println(nomTF);
-        }else System.out.println("pas de nom");
-        
+    public void actionTFNumero(KeyEvent event) {
+
+        if (numero.getText().matches("\\d+")) {
+            if (type.getValue().equalsIgnoreCase("docteur")) {
+                actionTF(numero, docteur);
+            } else if (type.getValue().equalsIgnoreCase("infirmier")) {
+                actionTF(numero, infirmier);
+            } else if (type.getValue().equalsIgnoreCase("malade")) {
+                actionTF(numero, malade);
+            }
+        } else {
+            try {
+
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(ProjetInfo3.class.getResource("Popupsaisienumero.fxml"));
+                AnchorPane page = (AnchorPane) loader.load();
+
+                Stage popup = new Stage();
+                popup.setTitle("message d'erreur");
+                //dialogStage.initModality(Modality.WINDOW_MODAL);
+                popup.initOwner(primaryStage);
+                Scene scene = new Scene(page);
+                popup.setScene(scene);
+
+        //PopupsaisienumeroController controller = loader.getController();
+                //controller.setDialogStage(popup);
+                //controller.setPerson(person);
+                // Show the dialog and wait until the user closes it
+                popup.show();//AndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
-    
+
+    public void actionTFnom(KeyEvent event) {
+        if (type.getValue().equalsIgnoreCase("docteur")) {
+            actionTF(nom, docteur);
+        } else if (type.getValue().equalsIgnoreCase("infirmier")) {
+            actionTF(nom, infirmier);
+        } else if (type.getValue().equalsIgnoreCase("malade")) {
+            actionTF(nom, malade);
+        }
+    }
+
+    public void actionTFPrenom(KeyEvent event) {
+        if (type.getValue().equalsIgnoreCase("docteur")) {
+            actionTF(prenom, docteur);
+        } else if (type.getValue().equalsIgnoreCase("infirmier")) {
+            actionTF(prenom, infirmier);
+        } else if (type.getValue().equalsIgnoreCase("malade")) {
+            actionTF(prenom, malade);
+        }
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Sous programme permettant de ne pas avoir ses identifiants Campus et base de donnée en clair dans le code
     private String dechiffreur(String code) {
@@ -365,7 +442,9 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
         gridMalade.setVisible(false);
         gridInfirmier.setVisible(false);
         //actionCBMedecin();
-        actionCBType();
+        //actionCBType();
         //actionTFnom();
+
     }
+
 }
