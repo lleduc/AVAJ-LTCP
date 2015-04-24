@@ -13,7 +13,7 @@ public class Infirmier extends Employe {
     
    private String code_service;
    private String rotation;
-   private float salaire;
+  
     
     public Infirmier()
     {
@@ -26,10 +26,6 @@ public class Infirmier extends Employe {
 
     public String getRotation() {
         return rotation;
-    }
-
-    public float getSalaire() {
-        return salaire;
     }
 
     

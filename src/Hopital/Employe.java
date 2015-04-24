@@ -11,21 +11,18 @@ package Hopital;
  */
 public class Employe extends Personne {
         
-    private int salaire;
+    private float salaire;
     
     public Employe()
     {
         
     }  
 
-    public int getSalaire() {
+    public float getSalaire() {
         return salaire;
     }
 
     public void setSalaire(int salaire) {
         this.salaire = salaire;
-    }
-    
-    
-    
+    } 
 }

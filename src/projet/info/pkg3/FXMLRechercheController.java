@@ -486,6 +486,7 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
             }
             System.out.println(requete);
         }
+        
         try {
             liste = maconnexion.remplirChampsRequete(requete);
 
