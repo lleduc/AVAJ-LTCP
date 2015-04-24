@@ -11,13 +11,14 @@ package Hopital;
  */
 public class Personne {
     
-    private int numero;
-    private String nom;
-    private String prenom;
-    private String adresse;
-    private String tel;
+    private int numero = 0;
+    private String nom = "";
+    private String prenom = "";
+    private String adresse = "";
+    private String tel = "";
 
     public Personne() {
+        
     }
 
     public int getNumero() {

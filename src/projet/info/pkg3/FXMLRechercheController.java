@@ -59,7 +59,7 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
 
     ObservableList<String> listeCBMedecin, listeCBType;
     ArrayList<String> liste = null;
-    public String requete;
+    public String requete, typeRequete;
     /////////////////////////////////////////////////////////////////////
     //String nomTF = null;
     //Employe  employe= new Employe();
@@ -187,7 +187,7 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
         type.setItems(listeCBType);
         ///////////////////////////////
         //ajout thomas
-        type.setValue("Select Type");
+        type.setValue("docteur");
         /////////////////////////////////
     }
 
@@ -362,6 +362,7 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
             personne.setNumero(Integer.parseInt(type.getText()));
             System.out.println(personne.getNumero());
         }
+        requete(personne);
     }
 
     public void actionTFNumero(KeyEvent event) {
@@ -380,11 +381,15 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
             }
         } else {
             System.out.println("pas de numero");
+            docteur.setNumero(0);
+            infirmier.setNumero(0);
+            malade.setNumero(0);
+
         }
     }
 
     public void actionTFnom(KeyEvent event) {
-        if (numero.getLength() > 0) {
+        if (nom.getLength() > 0) {
             if (type.getValue().equalsIgnoreCase("docteur")) {
                 actionTF(nom, docteur);
             } else if (type.getValue().equalsIgnoreCase("infirmier")) {
@@ -394,11 +399,14 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
             }
         } else {
             System.out.println("pas de nom");
+            docteur.setNom("");
+            infirmier.setNom("");
+            malade.setNom("");
         }
     }
 
     public void actionTFPrenom(KeyEvent event) {
-        if (numero.getLength() > 0) {
+        if (prenom.getLength() > 0) {
             if (type.getValue().equalsIgnoreCase("docteur")) {
                 actionTF(prenom, docteur);
             } else if (type.getValue().equalsIgnoreCase("infirmier")) {
@@ -408,9 +416,88 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
             }
         } else {
             System.out.println("pas de prenom");
+            docteur.setPrenom("");
+            infirmier.setPrenom("");
+            malade.setPrenom("");
         }
     }
-    
+
+    public void requete(Personne personne) {
+        //System.out.println("requete");
+
+        String typeSelect = personne.getClass().getName().substring(8).toLowerCase();
+        System.out.println(typeSelect);
+
+        if (typeSelect.equalsIgnoreCase("docteur") || typeSelect.equalsIgnoreCase("infirmier")) {
+            typeRequete = "employe";
+        } else {
+            typeRequete = "malade";
+        }
+
+        requete = "SELECT DISTINCT " + typeRequete + ".nom, " + typeRequete + ".prenom\n"
+                + "FROM employe employe, docteur docteur, infirmier infirmier, malade malade \n"
+                + "WHERE " + typeRequete + ".no_" + typeRequete + " = " + typeSelect + ".no_" + typeSelect +"\n";
+
+        if (numero.getLength() > 0) {
+            requete += " AND " + typeRequete + ".no_" + typeRequete + " = '";
+            switch (typeSelect) {
+                case "docteur":
+                    requete += docteur.getNumero() + "%'\n";
+                    break;
+                case "infirmier":
+                    requete += infirmier.getNumero() + "%'\n";
+                    break;
+                case "malade":
+                    requete += malade.getNumero() + "%'\n";
+                    break;
+            }
+            System.out.println(requete);
+             
+
+            System.out.println(requete);
+        }
+        if (nom.getLength() > 0) {
+            requete += "AND " + typeRequete + ".nom LIKE '";
+            switch (typeSelect) {
+                case "docteur":
+                    requete += docteur.getNom() + "%'\n";
+                    break;
+                case "infirmier":
+                    requete += infirmier.getNom() + "%'\n";
+                    break;
+                case "malade":
+                    requete += malade.getNom() + "%'\n";
+                    break;
+            }
+            System.out.println(requete);
+        }
+        if (prenom.getLength() > 0) {
+            requete += "AND " + typeRequete + ".prenom LIKE '";
+            switch (typeSelect) {
+                case "docteur":
+                    requete += docteur.getPrenom() + "%'\n";
+                    break;
+                case "infirmier":
+                    requete += infirmier.getPrenom() + "%'\n";
+                    break;
+                case "malade":
+                    requete += malade.getPrenom() + "%'\n";
+                    break;
+            }
+            System.out.println(requete);
+        }
+        try {
+            liste = maconnexion.remplirChampsRequete(requete);
+
+            // afficher les lignes de la requete selectionnee a partir de la liste
+            for (int i = 0; i < liste.size(); i++) {
+                System.out.println(liste.get(i));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLRechercheController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public void popup() {
         try {
 
@@ -425,8 +512,8 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
             Scene scene = new Scene(page);
             popup.setScene(scene);
 
-            PopupsaisienumeroController controleur = loader.getController();
-                //controller.setDialogStage(popup);
+            //PopupsaisienumeroController controleur = loader.getController();
+            //controller.setDialogStage(popup);
             //controller.setPerson(person);
             // Show the dialog and wait until the user closes it
             popup.showAndWait();
@@ -456,7 +543,7 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
         gridMalade.setVisible(false);
         gridInfirmier.setVisible(false);
         //actionCBMedecin();
-        //actionCBType();
+        actionCBType();
         //actionTFnom();
 
     }
