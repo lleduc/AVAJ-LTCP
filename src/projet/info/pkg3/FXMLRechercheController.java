@@ -281,23 +281,53 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
 
     public void actionCBSpecialite() {
         specialite.setOnAction((event) -> {
-            requete = specialite.getValue();
-            //System.out.println("ComboBox Action (selected: " + medecin.getValue().substring(0, medecin.getValue().length()-1)+")");
-            try {
+            /*requete = specialite.getValue();
+             //System.out.println("ComboBox Action (selected: " + medecin.getValue().substring(0, medecin.getValue().length()-1)+")");
+             try {
+            
+             requete = "SELECT DISTINCT e.nom , e.prenom\n"
+             + "FROM docteur d, employe e\n"
+             + "WHERE e.no_employe = d.no_docteur AND d.specialite ='" + specialite.getValue().substring(0, specialite.getValue().length() - 1) + "'\n"
+             + "ORDER BY nom\n";
+             liste = maconnexion.remplirChampsRequete(requete);
+            
+             // afficher les lignes de la requete selectionnee a partir de la liste
+             for (int i = 0; i < liste.size(); i++) {
+             System.out.println(liste.get(i));
+             }
+             } catch (SQLException ex) {
+             Logger.getLogger(FXMLRechercheController.class.getName()).log(Level.SEVERE, null, ex);
+             }*/
+            docteur.setSpecialite(specialite.getValue().substring(0, specialite.getValue().length() - 1));
+            requete(docteur);
+        });
+    }
 
-                requete = "SELECT DISTINCT e.nom , e.prenom\n"
-                        + "FROM docteur d, employe e\n"
-                        + "WHERE e.no_employe = d.no_docteur AND d.specialite ='" + specialite.getValue().substring(0, specialite.getValue().length() - 1) + "'\n"
-                        + "ORDER BY nom\n";
-                liste = maconnexion.remplirChampsRequete(requete);
+    public void actionCBService() {
+        codeService.setOnAction((event) -> {
+            infirmier.setCode_service(codeService.getValue().substring(0, codeService.getValue().length() - 1));
+            requete(infirmier);
+        });
+    }
 
-                // afficher les lignes de la requete selectionnee a partir de la liste
-                for (int i = 0; i < liste.size(); i++) {
-                    System.out.println(liste.get(i));
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(FXMLRechercheController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+    public void actionCBRotation() {
+        rotation.setOnAction((event) -> {
+            infirmier.setRotation(rotation.getValue().substring(0, rotation.getValue().length() - 1));
+            requete(infirmier);
+        });
+    }
+
+    public void actionCBMutuelle() {
+        mutuelle.setOnAction((event) -> {
+            malade.setMutuelle(mutuelle.getValue().substring(0, mutuelle.getValue().length() - 1));
+            requete(malade);
+        });
+    }
+
+    public void actionCBChambre() {
+        numeroChambre.setOnAction((event) -> {
+            // Pas d'accès direct à la variable chambre
+            requete(malade);
         });
     }
 
@@ -319,11 +349,14 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
             if ("infirmier".equals(requete)) {
                 gridCommune.setVisible(true);
                 gridInfirmier.setVisible(true);
-
+                actionCBService();
+                actionCBRotation();
             }
             if ("malade".equals(requete)) {
                 gridCommune.setVisible(true);
                 gridMalade.setVisible(true);
+                actionCBMutuelle();
+                actionCBChambre();
             }
         });
         /////////////////////////////////////////////////////////////
@@ -436,7 +469,7 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
 
         requete = "SELECT DISTINCT " + typeRequete + ".nom, " + typeRequete + ".prenom\n"
                 + "FROM employe employe, docteur docteur, infirmier infirmier, malade malade \n"
-                + "WHERE " + typeRequete + ".no_" + typeRequete + " = " + typeSelect + ".no_" + typeSelect +"\n";
+                + "WHERE " + typeRequete + ".no_" + typeRequete + " = " + typeSelect + ".no_" + typeSelect + "\n";
 
         if (numero.getLength() > 0) {
             requete += " AND " + typeRequete + ".no_" + typeRequete + " = '";
@@ -451,10 +484,7 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
                     requete += malade.getNumero() + "%'\n";
                     break;
             }
-            System.out.println(requete);
-             
-
-            System.out.println(requete);
+            //System.out.println(requete);
         }
         if (nom.getLength() > 0) {
             requete += "AND " + typeRequete + ".nom LIKE '";
@@ -469,7 +499,7 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
                     requete += malade.getNom() + "%'\n";
                     break;
             }
-            System.out.println(requete);
+            //System.out.println(requete);
         }
         if (prenom.getLength() > 0) {
             requete += "AND " + typeRequete + ".prenom LIKE '";
@@ -484,9 +514,26 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
                     requete += malade.getPrenom() + "%'\n";
                     break;
             }
-            System.out.println(requete);
+            //System.out.println(requete);
+        }
+        if (typeSelect.equalsIgnoreCase("docteur") && docteur.getSpecialite() != null) {
+            requete += "AND docteur.specialite ='" + docteur.getSpecialite() + "'\n";          
+        }
+        if (typeSelect.equalsIgnoreCase("infirmier") && infirmier.getCode_service() != null) {
+            requete += "AND infirmier.code_service ='" + infirmier.getCode_service() + "'\n";           
+        }
+        if (typeSelect.equalsIgnoreCase("infirmier") && infirmier.getRotation() != null) {
+            requete += "AND infirmier.rotation ='" + infirmier.getRotation() + "'\n";      
+        }
+        if (typeSelect.equalsIgnoreCase("malade") && malade.getMutuelle() != null) {
+            requete += "AND malade.mutuelle ='" + malade.getMutuelle() + "'\n";           
+        }
+        if (typeSelect.equalsIgnoreCase("malade") && numeroChambre.getValue().substring(0, medecin.getValue().length() - 1) != null) {
+            requete += "AND malade.no_malade = hospitalisation.no_malade\n"
+                    + "AND hospitalisation.no_chambre ='" + numeroChambre.getValue().substring(0, medecin.getValue().length() - 1) + "'\n";      
         }
         
+        System.out.println(requete);
         try {
             liste = maconnexion.remplirChampsRequete(requete);
 

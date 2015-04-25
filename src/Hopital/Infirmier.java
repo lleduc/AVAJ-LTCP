@@ -28,6 +28,14 @@ public class Infirmier extends Employe {
         return rotation;
     }
 
+    public void setCode_service(String code_service) {
+        this.code_service = code_service;
+    }
+
+    public void setRotation(String rotation) {
+        this.rotation = rotation;
+    }
+
     
     
 }

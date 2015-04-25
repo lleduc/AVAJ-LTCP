@@ -11,7 +11,7 @@ package Hopital;
  */
 public class Docteur extends Employe{
     
-    private String spécialité;
+    private String specialite;
  
     
     public Docteur()
@@ -19,12 +19,12 @@ public class Docteur extends Employe{
         
     }
     
-    public String getSpécialité() {
-        return spécialité;
+    public String getSpecialite() {
+        return specialite;
     }
 
-    public void setSpécialité(String spécialité) {
-        this.spécialité = spécialité;
+    public void setSpecialite(String specialite) {
+        this.specialite = specialite;
     }
     
    
