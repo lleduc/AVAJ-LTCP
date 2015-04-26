@@ -3,12 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package projet.info.pkg3;
-import projet.info.pkg3.FXMLRechercheController;
+package VueControleur;
+
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 /**
@@ -16,13 +14,11 @@ import javafx.fxml.Initializable;
  *
  * @author thomas
  */
-public class PopupsaisienumeroController implements Initializable {
+public class FXMLMAJAjoutController implements Initializable {
 
     /**
      * Initializes the controller class.
      */
-    
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO

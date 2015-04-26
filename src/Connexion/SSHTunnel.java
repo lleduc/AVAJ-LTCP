@@ -1,4 +1,4 @@
-package jdbc2014;
+package Connexion;
 
 import com.jcraft.jsch.*;
 

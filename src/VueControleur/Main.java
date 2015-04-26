@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package projet.info.pkg3;
+package VueControleur;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -14,13 +14,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.layout.AnchorPane;
-import jdbc2014.Connexion;
+import Connexion.Connexion;
 
 /**
  *
  * @author thomas
  */
-public class ProjetInfo3 extends Application {
+public class Main extends Application {
     
     protected Stage primaryStage;
     protected AnchorPane menu;
@@ -31,7 +31,7 @@ public class ProjetInfo3 extends Application {
     public void start(Stage stage) throws Exception {
               
         this.primaryStage = stage;
-        this.primaryStage.setTitle("AVAJ LTCP");
+        this.primaryStage.setTitle("AVAJ LTCP Care");
         
         initMenu();
         
@@ -41,7 +41,7 @@ public class ProjetInfo3 extends Application {
         try {
             
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(ProjetInfo3.class.getResource("FXMLRecherchebis.fxml"));
+            loader.setLocation(Main.class.getResource("FXMLRecherchebis.fxml"));
             menu = (AnchorPane) loader.load();
 
             

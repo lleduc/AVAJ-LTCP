@@ -12,7 +12,7 @@ package Hopital;
 public class Hospitalisation {
     private int no_malade;
     private String code_service;
-    private int no_chambre;
+    private int no_chambre = 0;
     private int lit;
     
     public Hospitalisation()

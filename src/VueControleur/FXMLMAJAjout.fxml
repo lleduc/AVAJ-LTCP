@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.effect.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="314.0" prefWidth="305.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="projet.info.pkg3.FXMLMAJAjoutController">
+   <children>
+      <GridPane fx:id="gridCommune" layoutX="21.0" layoutY="31.0" prefHeight="90.0" prefWidth="270.0">
+         <children>
+            <Label text="Numéro :" />
+            <Label text="Nom  :" GridPane.rowIndex="1" />
+            <Label text="Prénom :" GridPane.rowIndex="2" />
+            <TextField fx:id="numero" onKeyReleased="#actionTFNumero" GridPane.columnIndex="1" />
+            <TextField fx:id="nom" onKeyReleased="#actionTFnom" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="prenom" onKeyReleased="#actionTFPrenom" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         </children>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+      </GridPane>
+      <GridPane fx:id="gridMalade" layoutX="21.0" layoutY="122.0" prefHeight="120.0" prefWidth="270.0">
+         <children>
+            <Label text="Mutuelle :" />
+            <Label text="Numéro de chambre :" GridPane.rowIndex="1" />
+            <Label text="Date d'entrée :" GridPane.rowIndex="2" />
+            <DatePicker fx:id="dateEntree" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Date de sortie :" GridPane.rowIndex="3" />
+            <DatePicker fx:id="dateSortie" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <ComboBox fx:id="mutuelle" prefWidth="150.0" GridPane.columnIndex="1" />
+            <ComboBox fx:id="numeroChambre" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         </children>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+      </GridPane>
+      <ToolBar layoutX="163.0" layoutY="260.0" prefHeight="40.0" prefWidth="128.0">
+         <effect>
+            <DropShadow color="#a1a1a1" />
+         </effect>
+         <items>
+            <Button mnemonicParsing="false" text="Valider" />
+            <Button mnemonicParsing="false" text="Annuler" />
+         </items>
+      </ToolBar>
+      <Label layoutX="21.0" layoutY="6.0" text="Modification/Ajout :">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

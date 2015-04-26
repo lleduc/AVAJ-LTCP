@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package projet.info.pkg3;
+package VueControleur;
 
+import Connexion.Connexion;
 import Hopital.*;
 import java.io.IOException;
-import jdbc2014.*;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -27,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -39,7 +40,7 @@ import javafx.stage.Stage;
  *
  * @author thomas
  */
-public class FXMLRechercheController extends ProjetInfo3 implements Initializable {
+public class FXMLRechercheController extends Main implements Initializable {
 
     //Variables de la fenêtre de recherche
     @FXML
@@ -56,6 +57,8 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
     private TextField nom;
     @FXML
     private TextField prenom;
+    @FXML
+    private TextArea resultat;
 
     ObservableList<String> listeCBMedecin, listeCBType;
     ArrayList<String> liste = null;
@@ -66,6 +69,7 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
     Malade malade = new Malade();
     Docteur docteur = new Docteur();
     Infirmier infirmier = new Infirmier();
+    Hospitalisation hospitalisation = new Hospitalisation();
     ///////////////////////////////////////////////////////////////////////
 
     //Variables de malade dans recherche
@@ -154,7 +158,7 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
                 listePatients();
 
             } catch (SQLException | ClassNotFoundException ex) {
-                Logger.getLogger(ProjetInfo3.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             System.out.println("Essaye encore");
@@ -326,7 +330,7 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
 
     public void actionCBChambre() {
         numeroChambre.setOnAction((event) -> {
-            // Pas d'accès direct à la variable chambre
+            hospitalisation.setNo_chambre(Integer.parseInt(numeroChambre.getValue().substring(0, mutuelle.getValue().length())));
             requete(malade);
         });
     }
@@ -528,7 +532,7 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
         if (typeSelect.equalsIgnoreCase("malade") && malade.getMutuelle() != null) {
             requete += "AND malade.mutuelle ='" + malade.getMutuelle() + "'\n";           
         }
-        if (typeSelect.equalsIgnoreCase("malade") && numeroChambre.getValue().substring(0, medecin.getValue().length() - 1) != null) {
+        if (typeSelect.equalsIgnoreCase("malade") && hospitalisation.getNo_chambre() != 0) {
             requete += "AND malade.no_malade = hospitalisation.no_malade\n"
                     + "AND hospitalisation.no_chambre ='" + numeroChambre.getValue().substring(0, medecin.getValue().length() - 1) + "'\n";      
         }
@@ -540,6 +544,7 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
             // afficher les lignes de la requete selectionnee a partir de la liste
             for (int i = 0; i < liste.size(); i++) {
                 System.out.println(liste.get(i));
+                //resultat.insertText(i, liste.get(i));
             }
         } catch (SQLException ex) {
             Logger.getLogger(FXMLRechercheController.class.getName()).log(Level.SEVERE, null, ex);
@@ -550,7 +555,7 @@ public class FXMLRechercheController extends ProjetInfo3 implements Initializabl
         try {
 
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(ProjetInfo3.class.getResource("Popupsaisienumero.fxml"));
+            loader.setLocation(Main.class.getResource("Popupsaisienumero.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
 
             popup = new Stage();
