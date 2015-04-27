@@ -14,14 +14,17 @@ import javafx.fxml.Initializable;
  *
  * @author thomas
  */
-public class FXMLMAJAjoutController implements Initializable {
+public class FXMLMAJAjoutController extends FXMLRechercheController implements Initializable {
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        if(ajout_modif==true)
+        {
+            
+        }
     }    
     
 }

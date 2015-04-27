@@ -26,6 +26,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -45,6 +46,8 @@ public class FXMLRechercheController extends Main implements Initializable {
     //Variables de la fenêtre de recherche
     @FXML
     public Stage popup;
+    @FXML 
+    public Label messagePopup;
     @FXML
     private TextField searchBar;
     @FXML
@@ -63,6 +66,8 @@ public class FXMLRechercheController extends Main implements Initializable {
     ObservableList<String> listeCBMedecin, listeCBType;
     ArrayList<String> liste = null;
     public String requete, typeRequete;
+    //Variable d'ajout/modification
+    public boolean ajout_modif= true;
     /////////////////////////////////////////////////////////////////////
     //String nomTF = null;
     //Employe  employe= new Employe();
@@ -136,6 +141,8 @@ public class FXMLRechercheController extends Main implements Initializable {
             e.printStackTrace();
         }
     }
+    
+    
 
     // Création de la connection à la base de donnée 
     // lors de l'appuie sur le bouton connection si
@@ -403,6 +410,10 @@ public class FXMLRechercheController extends Main implements Initializable {
     }
 
     public void actionTFNumero(KeyEvent event) {
+        
+       
+       String ressource ="Popupsaisienumero.fxml";
+       String titre ="Message d'erreur";
         if (numero.getLength() > 0) {
             if (numero.getText().matches("\\d+")) {
                 if (type.getValue().equalsIgnoreCase("docteur")) {
@@ -413,7 +424,7 @@ public class FXMLRechercheController extends Main implements Initializable {
                     actionTF(numero, malade);
                 }
             } else {
-                popup();
+                popup(ressource, titre);
                 numero.setText("");
             }
         } else {
@@ -424,7 +435,47 @@ public class FXMLRechercheController extends Main implements Initializable {
 
         }
     }
+    public void popup(String ressource, String titre) {
+        try {
+            popup = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource(ressource));
+            AnchorPane page = (AnchorPane) loader.load();
 
+            
+            popup.setTitle(titre);
+            popup.initModality(Modality.WINDOW_MODAL);
+            popup.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            popup.setScene(scene);
+
+            //PopupsaisienumeroController controleur = loader.getController();
+            //controller.setDialogStage(popup);
+            //controller.setPerson(person);
+            // Show the dialog and wait until the user closes it
+            popup.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void Ajouter(ActionEvent event)
+    {
+        ajout_modif = true;
+        String ressource = "FXMLMAJAjout.fxml";
+        String titre = "Ajout d'un champ";
+        popup(ressource, titre);
+    }
+    public void Modifier(ActionEvent event)
+    {
+        ajout_modif = false;
+        String ressource = "FXMLMAJAjout.fxml";
+        String titre = "Modification d'un champ";
+        popup(ressource, titre);
+    }
+    
+    
     public void actionTFnom(KeyEvent event) {
         if (nom.getLength() > 0) {
             if (type.getValue().equalsIgnoreCase("docteur")) {
@@ -551,30 +602,7 @@ public class FXMLRechercheController extends Main implements Initializable {
         }
     }
 
-    public void popup() {
-        try {
-
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("Popupsaisienumero.fxml"));
-            AnchorPane page = (AnchorPane) loader.load();
-
-            popup = new Stage();
-            popup.setTitle("Message d'erreur");
-            popup.initModality(Modality.WINDOW_MODAL);
-            popup.initOwner(primaryStage);
-            Scene scene = new Scene(page);
-            popup.setScene(scene);
-
-            //PopupsaisienumeroController controleur = loader.getController();
-            //controller.setDialogStage(popup);
-            //controller.setPerson(person);
-            // Show the dialog and wait until the user closes it
-            popup.showAndWait();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Sous programme permettant de ne pas avoir ses identifiants Campus et base de donnée en clair dans le code
