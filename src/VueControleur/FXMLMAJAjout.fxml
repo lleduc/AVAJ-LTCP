@@ -8,9 +8,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="314.0" prefWidth="305.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VueControleur.FXMLMAJAjoutController">
+<AnchorPane id="AnchorPane" prefHeight="355.0" prefWidth="305.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VueControleur.FXMLMAJAjoutController">
    <children>
-      <GridPane fx:id="gridCommune" layoutX="21.0" layoutY="31.0" prefHeight="90.0" prefWidth="270.0">
+      <GridPane fx:id="gridCommune" layoutX="18.0" layoutY="72.0" prefHeight="90.0" prefWidth="270.0">
          <children>
             <Label text="Numéro :" />
             <Label text="Nom  :" GridPane.rowIndex="1" />
@@ -29,7 +29,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
-      <GridPane fx:id="gridMalade" layoutX="21.0" layoutY="122.0" prefHeight="120.0" prefWidth="270.0">
+      <GridPane fx:id="gridMalade" layoutX="18.0" layoutY="163.0" prefHeight="120.0" prefWidth="270.0">
          <children>
             <Label text="Mutuelle :" />
             <Label text="Numéro de chambre :" GridPane.rowIndex="1" />
@@ -51,7 +51,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
-      <ToolBar layoutX="163.0" layoutY="260.0" prefHeight="40.0" prefWidth="128.0">
+      <ToolBar layoutX="160.0" layoutY="301.0" prefHeight="40.0" prefWidth="128.0">
          <effect>
             <DropShadow color="#a1a1a1" />
          </effect>
@@ -60,10 +60,40 @@
             <Button mnemonicParsing="false" text="Annuler" />
          </items>
       </ToolBar>
-      <Label layoutX="21.0" layoutY="6.0" text="Modification/Ajout :">
+      <Label layoutX="18.0" layoutY="14.0" text="Modification/Ajout :">
          <font>
             <Font size="14.0" />
          </font>
       </Label>
+      <ComboBox fx:id="type" layoutX="18.0" layoutY="40.0" prefWidth="150.0" promptText="Select type" />
+      <GridPane fx:id="gridInfirmier" layoutX="18.0" layoutY="163.0" prefHeight="60.0" prefWidth="270.0">
+         <children>
+            <Label text="Code Service :" />
+            <Label text="Rotation :" GridPane.rowIndex="1" />
+            <ComboBox fx:id="codeService" prefWidth="150.0" GridPane.columnIndex="1" />
+            <ComboBox fx:id="rotation" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         </children>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+      </GridPane>
+      <GridPane fx:id="gridMedecin" layoutX="18.0" layoutY="163.0" prefHeight="30.0" prefWidth="270.0">
+         <children>
+            <ComboBox fx:id="specialite" prefWidth="150.0" GridPane.columnIndex="1" />
+            <Label text="Spécialité :" />
+         </children>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+      </GridPane>
    </children>
 </AnchorPane>

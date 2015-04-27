@@ -12,7 +12,7 @@ package Hopital;
 public class Hospitalisation {
     private int no_malade;
     private String code_service;
-    private int no_chambre = 0;
+    private String no_chambre;
     private int lit;
     
     public Hospitalisation()
@@ -28,7 +28,7 @@ public class Hospitalisation {
         return code_service;
     }
 
-    public int getNo_chambre() {
+    public String getNo_chambre() {
         return no_chambre;
     }
 
@@ -44,7 +44,7 @@ public class Hospitalisation {
         this.code_service = code_service;
     }
 
-    public void setNo_chambre(int no_chambre) {
+    public void setNo_chambre(String no_chambre) {
         this.no_chambre = no_chambre;
     }
 

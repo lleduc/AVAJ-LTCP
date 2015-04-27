@@ -7,7 +7,9 @@ package VueControleur;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.layout.GridPane;
 
 /**
  * FXML Controller class
@@ -15,16 +17,34 @@ import javafx.fxml.Initializable;
  * @author thomas
  */
 public class FXMLMAJAjoutController extends FXMLRechercheController implements Initializable {
-
-    /**
-     * Initializes the controller class.
+ @FXML
+    private GridPane gridMedecin;
+  @FXML
+    private GridPane gridInfirmier;
+   @FXML
+    private GridPane gridMalade;
+    @FXML
+    private GridPane gridCommune;
+   
+     /* Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+      
+        initCBType();
+        actionCBType();
+        gridCommune.setVisible(true);
+        gridMedecin.setVisible(false);
+        gridMalade.setVisible(false);
+        gridInfirmier.setVisible(false);
+       
         if(ajout_modif==true)
         {
+  System.out.println(lala);
             
         }
+        
     }    
+    
     
 }

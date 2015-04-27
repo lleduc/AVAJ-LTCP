@@ -68,7 +68,9 @@ public class FXMLRechercheController extends Main implements Initializable {
     public String requete, typeRequete;
     //Variable d'ajout/modification
     public boolean ajout_modif= true;
-    /////////////////////////////////////////////////////////////////////
+    public String  personneTemporaire; //numéro personne utilisé pour l'ajout et la modification
+    public String lala;
+/////////////////////////////////////////////////////////////////////
     //String nomTF = null;
     //Employe  employe= new Employe();
     Malade malade = new Malade();
@@ -309,7 +311,7 @@ public class FXMLRechercheController extends Main implements Initializable {
              } catch (SQLException ex) {
              Logger.getLogger(FXMLRechercheController.class.getName()).log(Level.SEVERE, null, ex);
              }*/
-            docteur.setSpecialite(specialite.getValue().substring(0, specialite.getValue().length() - 1));
+           docteur.setSpecialite(specialite.getValue().substring(0, specialite.getValue().length() - 1));
             requete(docteur);
         });
     }
@@ -337,7 +339,7 @@ public class FXMLRechercheController extends Main implements Initializable {
 
     public void actionCBChambre() {
         numeroChambre.setOnAction((event) -> {
-            hospitalisation.setNo_chambre(Integer.parseInt(numeroChambre.getValue().substring(0, mutuelle.getValue().length())));
+            hospitalisation.setNo_chambre(numeroChambre.getValue().substring(0, numeroChambre.getValue().length()-1));
             requete(malade);
         });
     }
@@ -354,7 +356,10 @@ public class FXMLRechercheController extends Main implements Initializable {
             if ("docteur".equals(requete)) {
                 gridCommune.setVisible(true);
                 gridMedecin.setVisible(true);
-                actionCBSpecialite();
+              
+                    actionCBSpecialite();
+                    
+                
 
             }
             if ("infirmier".equals(requete)) {
@@ -462,13 +467,19 @@ public class FXMLRechercheController extends Main implements Initializable {
     
     public void Ajouter(ActionEvent event)
     {
+       
+        System.out.println(personneTemporaire);
+        lala=personneTemporaire.substring(0, 2);
+        System.out.println(lala);
         ajout_modif = true;
         String ressource = "FXMLMAJAjout.fxml";
         String titre = "Ajout d'un champ";
         popup(ressource, titre);
+        
     }
     public void Modifier(ActionEvent event)
     {
+       
         ajout_modif = false;
         String ressource = "FXMLMAJAjout.fxml";
         String titre = "Modification d'un champ";
@@ -522,8 +533,8 @@ public class FXMLRechercheController extends Main implements Initializable {
             typeRequete = "malade";
         }
 
-        requete = "SELECT DISTINCT " + typeRequete + ".nom, " + typeRequete + ".prenom\n"
-                + "FROM employe employe, docteur docteur, infirmier infirmier, malade malade \n"
+        requete = "SELECT DISTINCT " + typeRequete +".no_"+ typeRequete +","+ typeRequete + ".nom, " + typeRequete + ".prenom\n"
+                + "FROM employe employe, docteur docteur, infirmier infirmier, malade malade, hospitalisation hospitalisation \n"
                 + "WHERE " + typeRequete + ".no_" + typeRequete + " = " + typeSelect + ".no_" + typeSelect + "\n";
 
         if (numero.getLength() > 0) {
@@ -583,9 +594,9 @@ public class FXMLRechercheController extends Main implements Initializable {
         if (typeSelect.equalsIgnoreCase("malade") && malade.getMutuelle() != null) {
             requete += "AND malade.mutuelle ='" + malade.getMutuelle() + "'\n";           
         }
-        if (typeSelect.equalsIgnoreCase("malade") && hospitalisation.getNo_chambre() != 0) {
+        if (typeSelect.equalsIgnoreCase("malade") && hospitalisation.getNo_chambre() != null) {
             requete += "AND malade.no_malade = hospitalisation.no_malade\n"
-                    + "AND hospitalisation.no_chambre ='" + numeroChambre.getValue().substring(0, medecin.getValue().length() - 1) + "'\n";      
+                    + "AND hospitalisation.no_chambre ='" + hospitalisation.getNo_chambre()+ "'\n";      
         }
         
         System.out.println(requete);
@@ -596,7 +607,13 @@ public class FXMLRechercheController extends Main implements Initializable {
             for (int i = 0; i < liste.size(); i++) {
                 System.out.println(liste.get(i));
                 //resultat.insertText(i, liste.get(i));
+                personneTemporaire=liste.get(0);
             }
+           //System.out.println(personneTemporaire);
+            
+                 
+            
+           
         } catch (SQLException ex) {
             Logger.getLogger(FXMLRechercheController.class.getName()).log(Level.SEVERE, null, ex);
         }
