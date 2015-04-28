@@ -28,6 +28,9 @@ public class FXMLMAJAjoutController extends FXMLRechercheController implements I
    
      /* Initializes the controller class.
      */
+    
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
       
