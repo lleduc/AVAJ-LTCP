@@ -17,11 +17,11 @@ import javafx.scene.layout.GridPane;
  * @author thomas
  */
 public class FXMLMAJAjoutController extends FXMLRechercheController implements Initializable {
- @FXML
+    @FXML
     private GridPane gridMedecin;
-  @FXML
+    @FXML
     private GridPane gridInfirmier;
-   @FXML
+    @FXML
     private GridPane gridMalade;
     @FXML
     private GridPane gridCommune;
@@ -29,13 +29,15 @@ public class FXMLMAJAjoutController extends FXMLRechercheController implements I
      /* Initializes the controller class.
      */
     
-    
+    public void lala(){
+         System.out.println(lala);
+    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
       
-        initCBType();
-        actionCBType();
+        //initCBType();
+        //actionCBType();
         gridCommune.setVisible(true);
         gridMedecin.setVisible(false);
         gridMalade.setVisible(false);
@@ -43,7 +45,7 @@ public class FXMLMAJAjoutController extends FXMLRechercheController implements I
        
         if(ajout_modif==true)
         {
-  System.out.println(lala);
+            lala();
             
         }
         

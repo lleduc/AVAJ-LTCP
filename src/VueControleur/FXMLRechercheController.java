@@ -27,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -46,7 +47,7 @@ public class FXMLRechercheController extends Main implements Initializable {
     //Variables de la fenêtre de recherche
     @FXML
     public Stage popup;
-    @FXML 
+    @FXML
     public Label messagePopup;
     @FXML
     private TextField searchBar;
@@ -67,8 +68,8 @@ public class FXMLRechercheController extends Main implements Initializable {
     ArrayList<String> liste = null;
     public String requete, typeRequete;
     //Variable d'ajout/modification
-    public boolean ajout_modif= true;
-    public String  personneTemporaire; //numéro personne utilisé pour l'ajout et la modification
+    public boolean ajout_modif = true;
+    public String personneTemporaire; //numéro personne utilisé pour l'ajout et la modification
     public String lala;
 /////////////////////////////////////////////////////////////////////
     //String nomTF = null;
@@ -119,6 +120,31 @@ public class FXMLRechercheController extends Main implements Initializable {
     @FXML
     private TextField identifiant, MDP;
 
+    //Variable de la fenêtre modification
+    @FXML
+    private ComboBox<String> type1;
+    @FXML
+    private TabPane tabPane;
+    @FXML
+    private GridPane gridMedecin1;
+    @FXML
+    private GridPane gridInfirmier1;
+    @FXML
+    private GridPane gridMalade1;
+    @FXML
+    private GridPane gridCommune1;
+    @FXML
+    private ComboBox<String> mutuelle1;
+    @FXML
+    private ComboBox<String> numeroChambre1;
+    @FXML
+    private ComboBox<String> specialite1;
+    @FXML
+    private ComboBox<String> rotation1;
+    @FXML
+    private ComboBox<String> codeService1;
+   
+
     //initialisationd la visibilité graphique
     // Sous programmes répondant aux actions sur l'interface graphique
     @FXML
@@ -143,8 +169,6 @@ public class FXMLRechercheController extends Main implements Initializable {
             e.printStackTrace();
         }
     }
-    
-    
 
     // Création de la connection à la base de donnée 
     // lors de l'appuie sur le bouton connection si
@@ -157,14 +181,19 @@ public class FXMLRechercheController extends Main implements Initializable {
                         dechiffreur("72656E792D7277"), dechiffreur("486A4237564B3952"));
 
                 initCBMedecin();
-                initCBType();
-                initCBMutuelle();
-                initCBNumeroChambre();
-                initCBSpecialite();
-                initCBRotation();
-                initCBCodeService();
+                initCBType(type);
+                initCBMutuelle(mutuelle);
+                initCBNumeroChambre(numeroChambre);
+                initCBSpecialite(specialite);
+                initCBRotation(rotation);
+                initCBCodeService(codeService);
 
                 listePatients();
+                ///////////////////////////////////////////////////////
+                for (int i = 1; i <= 4; i++) {
+                    tabPane.getTabs().get(i).getContent().setDisable(false);
+                }
+                //////////////////////////////////////////////////////
 
             } catch (SQLException | ClassNotFoundException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
@@ -195,7 +224,7 @@ public class FXMLRechercheController extends Main implements Initializable {
 
     }
 
-    public void initCBType() {
+    public void initCBType(ComboBox<String> type) {
         listeCBType = FXCollections.observableArrayList("docteur", "infirmier", "malade");
         type.setItems(listeCBType);
         ///////////////////////////////
@@ -204,7 +233,7 @@ public class FXMLRechercheController extends Main implements Initializable {
         /////////////////////////////////
     }
 
-    public void initCBMutuelle() {
+    public void initCBMutuelle(ComboBox<String> mutuelle) {
         try {
             requete = "SELECT DISTINCT mutuelle\n"
                     + "FROM malade\n"
@@ -217,7 +246,7 @@ public class FXMLRechercheController extends Main implements Initializable {
         }
     }
 
-    public void initCBNumeroChambre() {
+    public void initCBNumeroChambre(ComboBox<String> numeroChambre) {
         try {
             requete = "SELECT DISTINCT no_chambre\n"
                     + "FROM hospitalisation\n"
@@ -230,7 +259,7 @@ public class FXMLRechercheController extends Main implements Initializable {
         }
     }
 
-    public void initCBSpecialite() {
+    public void initCBSpecialite(ComboBox<String> specialite) {
         try {
             requete = "SELECT DISTINCT specialite\n"
                     + "FROM docteur\n"
@@ -243,7 +272,7 @@ public class FXMLRechercheController extends Main implements Initializable {
         }
     }
 
-    public void initCBCodeService() {
+    public void initCBCodeService(ComboBox<String> codeService) {
         try {
             requete = "SELECT DISTINCT code\n"
                     + "FROM service\n"
@@ -256,7 +285,7 @@ public class FXMLRechercheController extends Main implements Initializable {
         }
     }
 
-    public void initCBRotation() {
+    public void initCBRotation(ComboBox<String> rotation) {
         try {
             requete = "SELECT DISTINCT rotation\n"
                     + "FROM infirmier\n"
@@ -311,7 +340,7 @@ public class FXMLRechercheController extends Main implements Initializable {
              } catch (SQLException ex) {
              Logger.getLogger(FXMLRechercheController.class.getName()).log(Level.SEVERE, null, ex);
              }*/
-           docteur.setSpecialite(specialite.getValue().substring(0, specialite.getValue().length() - 1));
+            docteur.setSpecialite(specialite.getValue().substring(0, specialite.getValue().length() - 1));
             requete(docteur);
         });
     }
@@ -339,12 +368,12 @@ public class FXMLRechercheController extends Main implements Initializable {
 
     public void actionCBChambre() {
         numeroChambre.setOnAction((event) -> {
-            hospitalisation.setNo_chambre(numeroChambre.getValue().substring(0, numeroChambre.getValue().length()-1));
+            hospitalisation.setNo_chambre(numeroChambre.getValue().substring(0, numeroChambre.getValue().length() - 1));
             requete(malade);
         });
     }
 
-    public void actionCBType() {
+    public void actionCBType(ComboBox<String> type, GridPane gridCommune, GridPane gridMedecin, GridPane gridMalade, GridPane gridInfirmier) {
         //////////////////////////////////////////////////////////////
         type.setOnAction((event) -> {
             requete = type.getValue();
@@ -356,10 +385,8 @@ public class FXMLRechercheController extends Main implements Initializable {
             if ("docteur".equals(requete)) {
                 gridCommune.setVisible(true);
                 gridMedecin.setVisible(true);
-              
-                    actionCBSpecialite();
-                    
-                
+
+                actionCBSpecialite();
 
             }
             if ("infirmier".equals(requete)) {
@@ -415,10 +442,9 @@ public class FXMLRechercheController extends Main implements Initializable {
     }
 
     public void actionTFNumero(KeyEvent event) {
-        
-       
-       String ressource ="Popupsaisienumero.fxml";
-       String titre ="Message d'erreur";
+
+        String ressource = "Popupsaisienumero.fxml";
+        String titre = "Message d'erreur";
         if (numero.getLength() > 0) {
             if (numero.getText().matches("\\d+")) {
                 if (type.getValue().equalsIgnoreCase("docteur")) {
@@ -440,6 +466,7 @@ public class FXMLRechercheController extends Main implements Initializable {
 
         }
     }
+
     public void popup(String ressource, String titre) {
         try {
             popup = new Stage();
@@ -447,7 +474,6 @@ public class FXMLRechercheController extends Main implements Initializable {
             loader.setLocation(Main.class.getResource(ressource));
             AnchorPane page = (AnchorPane) loader.load();
 
-            
             popup.setTitle(titre);
             popup.initModality(Modality.WINDOW_MODAL);
             popup.initOwner(primaryStage);
@@ -464,29 +490,33 @@ public class FXMLRechercheController extends Main implements Initializable {
             e.printStackTrace();
         }
     }
-    
-    public void Ajouter(ActionEvent event)
-    {
-       
+
+    public void Ajouter(ActionEvent event) {
+
         System.out.println(personneTemporaire);
-        lala=personneTemporaire.substring(0, 2);
+        lala = personneTemporaire.substring(0, 2);
         System.out.println(lala);
         ajout_modif = true;
         String ressource = "FXMLMAJAjout.fxml";
         String titre = "Ajout d'un champ";
         popup(ressource, titre);
-        
+
     }
-    public void Modifier(ActionEvent event)
-    {
-       
-        ajout_modif = false;
-        String ressource = "FXMLMAJAjout.fxml";
-        String titre = "Modification d'un champ";
-        popup(ressource, titre);
+
+    public void Modifier(ActionEvent event) {
+        tabPane.getTabs().get(5).getContent().setDisable(false);
+        tabPane.getSelectionModel().select(5);
+        actionCBType(type1, gridCommune1, gridMedecin1, gridMalade1, gridInfirmier1);
+        initCBType(type1);
+        initCBMutuelle(mutuelle1);
+        initCBNumeroChambre(numeroChambre1);
+        initCBSpecialite(specialite1);
+        initCBRotation(rotation1);
+        initCBCodeService(codeService1);
+        //tabPane.getSelectionModel().select(5).setVisible(true);
+
     }
-    
-    
+
     public void actionTFnom(KeyEvent event) {
         if (nom.getLength() > 0) {
             if (type.getValue().equalsIgnoreCase("docteur")) {
@@ -533,7 +563,7 @@ public class FXMLRechercheController extends Main implements Initializable {
             typeRequete = "malade";
         }
 
-        requete = "SELECT DISTINCT " + typeRequete +".no_"+ typeRequete +","+ typeRequete + ".nom, " + typeRequete + ".prenom\n"
+        requete = "SELECT DISTINCT " + typeRequete + ".no_" + typeRequete + "," + typeRequete + ".nom, " + typeRequete + ".prenom\n"
                 + "FROM employe employe, docteur docteur, infirmier infirmier, malade malade, hospitalisation hospitalisation \n"
                 + "WHERE " + typeRequete + ".no_" + typeRequete + " = " + typeSelect + ".no_" + typeSelect + "\n";
 
@@ -583,22 +613,22 @@ public class FXMLRechercheController extends Main implements Initializable {
             //System.out.println(requete);
         }
         if (typeSelect.equalsIgnoreCase("docteur") && docteur.getSpecialite() != null) {
-            requete += "AND docteur.specialite ='" + docteur.getSpecialite() + "'\n";          
+            requete += "AND docteur.specialite ='" + docteur.getSpecialite() + "'\n";
         }
         if (typeSelect.equalsIgnoreCase("infirmier") && infirmier.getCode_service() != null) {
-            requete += "AND infirmier.code_service ='" + infirmier.getCode_service() + "'\n";           
+            requete += "AND infirmier.code_service ='" + infirmier.getCode_service() + "'\n";
         }
         if (typeSelect.equalsIgnoreCase("infirmier") && infirmier.getRotation() != null) {
-            requete += "AND infirmier.rotation ='" + infirmier.getRotation() + "'\n";      
+            requete += "AND infirmier.rotation ='" + infirmier.getRotation() + "'\n";
         }
         if (typeSelect.equalsIgnoreCase("malade") && malade.getMutuelle() != null) {
-            requete += "AND malade.mutuelle ='" + malade.getMutuelle() + "'\n";           
+            requete += "AND malade.mutuelle ='" + malade.getMutuelle() + "'\n";
         }
         if (typeSelect.equalsIgnoreCase("malade") && hospitalisation.getNo_chambre() != null) {
             requete += "AND malade.no_malade = hospitalisation.no_malade\n"
-                    + "AND hospitalisation.no_chambre ='" + hospitalisation.getNo_chambre()+ "'\n";      
+                    + "AND hospitalisation.no_chambre ='" + hospitalisation.getNo_chambre() + "'\n";
         }
-        
+
         System.out.println(requete);
         try {
             liste = maconnexion.remplirChampsRequete(requete);
@@ -607,19 +637,14 @@ public class FXMLRechercheController extends Main implements Initializable {
             for (int i = 0; i < liste.size(); i++) {
                 System.out.println(liste.get(i));
                 //resultat.insertText(i, liste.get(i));
-                personneTemporaire=liste.get(0);
+                personneTemporaire = liste.get(0);
             }
-           //System.out.println(personneTemporaire);
-            
-                 
-            
-           
+            //System.out.println(personneTemporaire);
+
         } catch (SQLException ex) {
             Logger.getLogger(FXMLRechercheController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Sous programme permettant de ne pas avoir ses identifiants Campus et base de donnée en clair dans le code
@@ -640,10 +665,20 @@ public class FXMLRechercheController extends Main implements Initializable {
         gridMedecin.setVisible(false);
         gridMalade.setVisible(false);
         gridInfirmier.setVisible(false);
+        gridCommune1.setVisible(true);
+        gridMedecin1.setVisible(false);
+        gridMalade1.setVisible(false);
+        gridInfirmier1.setVisible(false);
         //actionCBMedecin();
-        actionCBType();
+        actionCBType(type, gridCommune, gridMedecin, gridMalade, gridInfirmier);
         //actionTFnom();
 
+        ////////////////////////////////////////
+        for (int i = 1; i <= 5; i++) {
+            tabPane.getTabs().get(i).getContent().setDisable(true);
+        }
+
+        //////////////////////////////////////
     }
 
 }
