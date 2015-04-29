@@ -135,6 +135,9 @@ public class FXMLController extends Main implements Initializable {
     private GridPane gridMalade1;
     @FXML
     private GridPane gridCommune1;
+    
+    @FXML
+    private GridPane gridCode1;
     @FXML
     private ComboBox<String> mutuelle1;
     @FXML
@@ -151,6 +154,14 @@ public class FXMLController extends Main implements Initializable {
     private TextField prenom1;
     @FXML
     private TextField numero1;
+    @FXML
+    private TextField code1;
+    @FXML
+    private TextField telephone1;
+    @FXML
+    private TextField adresse1;
+    @FXML
+    private TextField salaire1;
 
     //initialisationd la visibilité graphique
     // Sous programmes répondant aux actions sur l'interface graphique
@@ -374,17 +385,18 @@ public class FXMLController extends Main implements Initializable {
             gridMedecin.setVisible(false);
             gridMalade.setVisible(false);
             gridInfirmier.setVisible(false);
-
+            gridCode1.setVisible(false);
+            
             if ("docteur".equals(requete)) {
                 gridCommune.setVisible(true);
                 gridMedecin.setVisible(true);
-
                 actionCBSpecialite();
-
+                gridCode1.setVisible(true);
             }
             if ("infirmier".equals(requete)) {
                 gridCommune.setVisible(true);
                 gridInfirmier.setVisible(true);
+                gridCode1.setVisible(true);
                 actionCBService();
                 actionCBRotation();
             }
@@ -489,7 +501,7 @@ public class FXMLController extends Main implements Initializable {
         tabPane.getTabs().get(5).getContent().setDisable(false);
         tabPane.getSelectionModel().select(5);
         actionCBType(type1, gridCommune1, gridMedecin1, gridMalade1, gridInfirmier1);
-        initCBType(type1, "");
+        initCBType(type1, "docteur");
         initCBMutuelle(mutuelle1);
         initCBNumeroChambre(numeroChambre1);
         initCBSpecialite(specialite1);
@@ -500,8 +512,39 @@ public class FXMLController extends Main implements Initializable {
     }
     
     public void Valider(ActionEvent event){
-        requete = "INSERT INTO employe VALUES ('" + numero1.getText() + "', '" + nom1.getText() + "', '" + prenom1.getText() + "', '8 rue Ampère', '07 77 30 69 24', '1234')";
+        
+        String typeSelect = type1.getValue();
+        String codemutuelle;
+        if (typeSelect.equalsIgnoreCase("docteur") || typeSelect.equalsIgnoreCase("infirmier")) {
+            typeRequete = "employe";
+            codemutuelle = code1.getText();
+        } else {
+            typeRequete = "malade";
+            codemutuelle = mutuelle1.getValue().substring(0, mutuelle1.getValue().length() - 1);
+        }
+        requete = "INSERT INTO " + typeRequete + " VALUES ('" + numero1.getText() + "', '" + nom1.getText() + "', '" + prenom1.getText() + "', '" + adresse1.getText() + "', '" + telephone1.getText() + "', '" + codemutuelle + "')";
         System.out.println(requete);
+        insertion(requete);
+        
+        if (typeSelect.equalsIgnoreCase("docteur")){
+            requete = "INSERT INTO  docteur  VALUES ('" + numero1.getText() + "', '" + specialite1.getValue().substring(0, specialite1.getValue().length() - 1) + "')";
+            System.out.println(requete);
+            insertion(requete);
+        }
+        if (typeSelect.equalsIgnoreCase("infirmier")){
+            requete = "INSERT INTO  infirmier  VALUES ('" + numero1.getText() + "', '" + codeService1.getValue().substring(0, codeService1.getValue().length() - 1) + "', '" + rotation1.getValue().substring(0, rotation1.getValue().length() - 1) +"', '" + salaire1.getText() + "')";
+            System.out.println(requete);
+            insertion(requete);
+        }
+        if (typeSelect.equalsIgnoreCase("malade")){
+        requete = "INSERT INTO  hospitalisation  VALUES ('" + numero1.getText() + "', '1', '" + numeroChambre1.getValue().substring(0, numeroChambre1.getValue().length() - 1) + "', '1', '1', '1')";
+        System.out.println(requete);
+        insertion(requete);
+        }
+        
+    }
+    
+    public void insertion(String requete){
         try {
             maconnexion.getStmt().executeUpdate(requete);
         } catch (SQLException ex) {
@@ -697,7 +740,7 @@ public class FXMLController extends Main implements Initializable {
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Sous programme permettant de ne pas avoir ses identifiants Campus et base de donnée en clair dans le code
+    // Provient de stackoverflow.com Sous programme permettant de ne pas avoir ses identifiants Campus et base de donnée en clair dans le code
     private String dechiffreur(String code) {
         StringBuilder codeClair = new StringBuilder("");
         for (int i = 0; i < code.length(); i += 2) {
@@ -706,6 +749,7 @@ public class FXMLController extends Main implements Initializable {
         }
         return codeClair.toString();
     }
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Initialisation des actions des combobox
     @Override

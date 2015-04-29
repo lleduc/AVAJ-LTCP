@@ -185,14 +185,14 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <Label layoutX="31.0" layoutY="29.0" text="Rechercher un rendez-vous" />
-                        <GridPane fx:id="gridCommune1" layoutX="31.0" layoutY="64.0" prefHeight="120.0" prefWidth="270.0">
+                        <GridPane fx:id="gridCommune2" layoutX="31.0" layoutY="64.0" prefHeight="120.0" prefWidth="270.0">
                            <children>
                               <Label text="Numéro :" />
                               <Label text="Nom  :" GridPane.rowIndex="1" />
                               <Label text="Prénom :" GridPane.rowIndex="2" />
-                              <TextField fx:id="numero1" GridPane.columnIndex="1" />
-                              <TextField fx:id="nom1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <TextField fx:id="prenom1" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField fx:id="numero2" GridPane.columnIndex="1" />
+                              <TextField fx:id="nom2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="prenom2" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                               <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="3" />
                               <Label text="Date :" GridPane.rowIndex="3" />
                            </children>
@@ -310,18 +310,21 @@
                            </rowConstraints>
                         </GridPane>
                         <ComboBox fx:id="type1" layoutX="50.0" layoutY="31.0" prefWidth="150.0" promptText="Select type" />
-                        <GridPane fx:id="gridInfirmier1" layoutX="50.0" layoutY="170.0" prefHeight="60.0" prefWidth="270.0">
+                        <GridPane fx:id="gridInfirmier1" layoutX="50.0" layoutY="170.0" prefHeight="90.0" prefWidth="270.0">
                            <children>
                               <Label text="Code Service :" />
                               <Label text="Rotation :" GridPane.rowIndex="1" />
                               <ComboBox fx:id="codeService1" prefWidth="150.0" GridPane.columnIndex="1" />
                               <ComboBox fx:id="rotation1" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label text="Salaire :" GridPane.rowIndex="2" />
+                              <TextField fx:id="salaire1" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                            </children>
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                            </columnConstraints>
                            <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
@@ -335,6 +338,35 @@
                               <Button fx:id="annuler1" mnemonicParsing="false" text="Annuler" />
                            </items>
                         </ToolBar>
+                        <GridPane layoutX="400.0" layoutY="67.0" prefHeight="60.0" prefWidth="345.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="168.0" minWidth="10.0" prefWidth="70.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="278.0" minWidth="10.0" prefWidth="275.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Adresse :" />
+                              <Label text="Téléphone :" GridPane.rowIndex="1" />
+                              <TextField fx:id="adresse1" GridPane.columnIndex="1" />
+                              <TextField fx:id="telephone1" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                           </children>
+                        </GridPane>
+                        <GridPane fx:id="gridCode1" layoutX="400.0" layoutY="127.0" prefHeight="30.0" prefWidth="345.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="168.0" minWidth="10.0" prefWidth="70.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="277.0" minWidth="10.0" prefWidth="275.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Code :" />
+                              <TextField fx:id="code1" GridPane.columnIndex="1" />
+                           </children>
+                        </GridPane>
                      </children>
                   </AnchorPane>
               </content>
