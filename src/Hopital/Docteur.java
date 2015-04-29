@@ -23,8 +23,8 @@ public class Docteur extends Employe{
         return specialite;
     }
 
-    public void setSpecialite(String spécialite) {
-        this.specialite = spécialite;
+    public void setSpecialite(String specialite) {
+        this.specialite = specialite;
     }
     
    

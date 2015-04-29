@@ -191,7 +191,7 @@ public class FXMLController extends Main implements Initializable {
                 
                 
                 initCBMedecin();
-                initCBType(type);
+                initCBType(type, "docteur");
                 initCBMutuelle(mutuelle);
                 initCBNumeroChambre(numeroChambre);
                 initCBSpecialite(specialite);
@@ -234,12 +234,12 @@ public class FXMLController extends Main implements Initializable {
 
     }
 
-    public void initCBType(ComboBox<String> type) {
+    public void initCBType(ComboBox<String> type, String types ) {
         listeCBType = FXCollections.observableArrayList("docteur", "infirmier", "malade");
         type.setItems(listeCBType);
         ///////////////////////////////
         //ajout thomas
-        type.setValue("docteur");
+        type.setValue(types);
         /////////////////////////////////
     }
 
@@ -489,7 +489,7 @@ public class FXMLController extends Main implements Initializable {
         tabPane.getTabs().get(5).getContent().setDisable(false);
         tabPane.getSelectionModel().select(5);
         actionCBType(type1, gridCommune1, gridMedecin1, gridMalade1, gridInfirmier1);
-        initCBType(type1);
+        initCBType(type1, "");
         initCBMutuelle(mutuelle1);
         initCBNumeroChambre(numeroChambre1);
         initCBSpecialite(specialite1);
@@ -508,22 +508,65 @@ public class FXMLController extends Main implements Initializable {
             Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public String list_get_zero(String requete) {
+        try {
+            liste = maconnexion.remplirChampsRequete(requete);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return liste.get(0);
+    }
 
     public void Modifier(ActionEvent event) {
-       
+        
+        int j = 0;
+        char a;
+        String typeSelect = type.getValue();
+        for (int i = 0; i < 4; i++) {
+            System.out.println(i);
+            a = personneTemporaire.charAt(i);
+            if (a == ',') {
+                j = i;
+            } 
+        }
+        lala = personneTemporaire.substring(0, j);
+        System.out.println(lala);
         tabPane.getTabs().get(5).getContent().setDisable(false);
         tabPane.getSelectionModel().select(5);
         actionCBType(type1, gridCommune1, gridMedecin1, gridMalade1, gridInfirmier1);
-        initCBType(type1);
+        initCBType(type1, type.getValue());
         initCBMutuelle(mutuelle1);
         initCBNumeroChambre(numeroChambre1);
         initCBSpecialite(specialite1);
         initCBRotation(rotation1);
         initCBCodeService(codeService1);
-        
+        //tabPane.getSelectionModel().select(5).setVisible(true);
+        if (typeSelect.equalsIgnoreCase("docteur") || typeSelect.equalsIgnoreCase("infirmier")) {
+            typeRequete = "employe";
+        } else {
+            typeRequete = "malade";
+        }
+        numero1.setText(lala);
+        nom1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".nom FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
+        prenom1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".prenom FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
+        if (typeSelect.equalsIgnoreCase("docteur")) {
+            specialite1.setValue(list_get_zero("SELECT DISTINCT " + typeSelect + ".specialite FROM docteur docteur WHERE " + typeSelect + ".no_" + typeSelect + " = '" + lala + "'\n"));
+        }
+        if (typeSelect.equalsIgnoreCase("malade")) {
+            //dateEntree1.(list_get_zero("SELECT DISTINCT hospitalisation.no_chambre FROM hospitalisation hospitalisation WHERE hospitalisation.no_" + typeSelect + " = '"+lala+"'\n" )));
+            numeroChambre1.setValue(list_get_zero("SELECT DISTINCT hospitalisation.no_chambre FROM hospitalisation hospitalisation WHERE hospitalisation.no_" + typeSelect + " = '" + lala + "'\n"));
+            mutuelle1.setValue(list_get_zero("SELECT DISTINCT " + typeSelect + ".mutuelle FROM malade malade WHERE " + typeSelect + ".no_" + typeSelect + " = '" + lala + "'\n"));
+        }
+        if (typeSelect.equalsIgnoreCase("infirmier")) {
+            rotation1.setValue(list_get_zero("SELECT DISTINCT infirmier.rotation FROM infirmier infirmier WHERE infirmier.no_" + typeSelect + " = '" + lala + "'\n"));
+            codeService1.setValue(list_get_zero("SELECT DISTINCT infirmier.code_service FROM infirmier infirmier WHERE infirmier.no_" + typeSelect + " = '" + lala + "'\n"));
+        }
 
     }
 
+   
     public void actionTFnom(KeyEvent event) {
         if (nom.getLength() > 0) {
             if (type.getValue().equalsIgnoreCase("docteur")) {

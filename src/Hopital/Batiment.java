@@ -12,5 +12,18 @@ package Hopital;
  */
 public class Batiment {
     
-    int no_Batiment;    
+    private int no_Batiment;   
+
+    public Batiment() {
+    }
+
+    public int getNo_Batiment() {
+        return no_Batiment;
+    }
+
+    public void setNo_Batiment(int no_Batiment) {
+        this.no_Batiment = no_Batiment;
+    }
+    
+    
 }
