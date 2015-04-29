@@ -331,7 +331,7 @@
                               <DropShadow color="#a1a1a1" />
                            </effect>
                            <items>
-                              <Button fx:id="valider1" mnemonicParsing="false" onAction="#Ajouter" text="Valider" />
+                              <Button fx:id="valider1" mnemonicParsing="false" onAction="#Valider" text="Valider" />
                               <Button fx:id="annuler1" mnemonicParsing="false" text="Annuler" />
                            </items>
                         </ToolBar>

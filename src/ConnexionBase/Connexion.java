@@ -99,4 +99,29 @@ public class Connexion {
         // Retourner l'ArrayList
         return liste;
     }
+
+    public Connection getConn() {
+        return conn;
+    }
+
+    public Statement getStmt() {
+        return stmt;
+    }
+
+    public ResultSet getRset() {
+        return rset;
+    }
+
+    public ResultSetMetaData getRsetMeta() {
+        return rsetMeta;
+    }
+
+    public ArrayList<String> getRequetes() {
+        return requetes;
+    }
+
+    public ArrayList<String> getRequetesMaj() {
+        return requetesMaj;
+    }
+    
 }

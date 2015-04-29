@@ -10,6 +10,7 @@ import Hopital.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -44,6 +45,7 @@ import javafx.stage.Stage;
  */
 public class FXMLController extends Main implements Initializable {
 
+    
     //Variables de la fenêtre de recherche
     @FXML
     public Stage popup;
@@ -185,6 +187,9 @@ public class FXMLController extends Main implements Initializable {
                 maconnexion = new Connexion(dechiffreur("72656E79"), dechiffreur("4C5A6F613235373424"),
                         dechiffreur("72656E792D7277"), dechiffreur("486A4237564B3952"));
 
+                
+                
+                
                 initCBMedecin();
                 initCBType(type);
                 initCBMutuelle(mutuelle);
@@ -480,11 +485,7 @@ public class FXMLController extends Main implements Initializable {
     }
 
     public void Ajouter(ActionEvent event) {
-
-        requete = "INSERT INTO employe VALUES ('" + numero1.getText() + "', '" + nom1.getText() + "', '" + prenom1.getText() + "')";
-    }
-
-    public void Modifier(ActionEvent event) {
+       
         tabPane.getTabs().get(5).getContent().setDisable(false);
         tabPane.getSelectionModel().select(5);
         actionCBType(type1, gridCommune1, gridMedecin1, gridMalade1, gridInfirmier1);
@@ -494,7 +495,32 @@ public class FXMLController extends Main implements Initializable {
         initCBSpecialite(specialite1);
         initCBRotation(rotation1);
         initCBCodeService(codeService1);
-        //tabPane.getSelectionModel().select(5).setVisible(true);
+        
+        
+    }
+    
+    public void Valider(ActionEvent event){
+        requete = "INSERT INTO employe VALUES ('" + numero1.getText() + "', '" + nom1.getText() + "', '" + prenom1.getText() + "', '8 rue Ampère', '07 77 30 69 24', '1234')";
+        System.out.println(requete);
+        try {
+            maconnexion.getStmt().executeUpdate(requete);
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void Modifier(ActionEvent event) {
+       
+        tabPane.getTabs().get(5).getContent().setDisable(false);
+        tabPane.getSelectionModel().select(5);
+        actionCBType(type1, gridCommune1, gridMedecin1, gridMalade1, gridInfirmier1);
+        initCBType(type1);
+        initCBMutuelle(mutuelle1);
+        initCBNumeroChambre(numeroChambre1);
+        initCBSpecialite(specialite1);
+        initCBRotation(rotation1);
+        initCBCodeService(codeService1);
+        
 
     }
 
