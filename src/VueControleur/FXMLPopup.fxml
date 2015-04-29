@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="121.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="VueControleur.FXMLPopupController">
+   <children>
+      <Label fx:id="messagePopup"  layoutX="21.0" layoutY="65.0" text="Veuillez n'utilisez que des chiffres pour le numéro" />
+      <Label layoutX="116.0" layoutY="28.0" text="ATTENTION :" />
+   </children>
+</AnchorPane>
