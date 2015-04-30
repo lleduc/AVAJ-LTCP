@@ -9,8 +9,11 @@ import ConnexionBase.Connexion;
 import Hopital.*;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -37,6 +40,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 /**
  * FXML Controller class
@@ -45,7 +49,6 @@ import javafx.stage.Stage;
  */
 public class FXMLController extends Main implements Initializable {
 
-    
     //Variables de la fenêtre de recherche
     @FXML
     public Stage popup;
@@ -103,6 +106,7 @@ public class FXMLController extends Main implements Initializable {
     ObservableList<String> listeCBSpecialite;
     @FXML
     private GridPane gridMedecin;
+    
 
     //Variables de infirmier dans recherche
     @FXML
@@ -114,7 +118,7 @@ public class FXMLController extends Main implements Initializable {
     @FXML
     private GridPane gridInfirmier;
 
-    //Variables de la fenêtre de recherche
+    //Variables de la fenêtre Liste patients
     @FXML
     private TableView patients;
 
@@ -135,7 +139,7 @@ public class FXMLController extends Main implements Initializable {
     private GridPane gridMalade1;
     @FXML
     private GridPane gridCommune1;
-    
+
     @FXML
     private GridPane gridCode1;
     @FXML
@@ -162,6 +166,10 @@ public class FXMLController extends Main implements Initializable {
     private TextField adresse1;
     @FXML
     private TextField salaire1;
+    @FXML
+    private DatePicker dateEntree1;
+    @FXML
+    private DatePicker dateSortie1;
 
     //initialisationd la visibilité graphique
     // Sous programmes répondant aux actions sur l'interface graphique
@@ -198,9 +206,6 @@ public class FXMLController extends Main implements Initializable {
                 maconnexion = new Connexion(dechiffreur("72656E79"), dechiffreur("4C5A6F613235373424"),
                         dechiffreur("72656E792D7277"), dechiffreur("486A4237564B3952"));
 
-                
-                
-                
                 initCBMedecin();
                 initCBType(type, "docteur");
                 initCBMutuelle(mutuelle);
@@ -245,7 +250,7 @@ public class FXMLController extends Main implements Initializable {
 
     }
 
-    public void initCBType(ComboBox<String> type, String types ) {
+    public void initCBType(ComboBox<String> type, String types) {
         listeCBType = FXCollections.observableArrayList("docteur", "infirmier", "malade");
         type.setItems(listeCBType);
         ///////////////////////////////
@@ -377,8 +382,8 @@ public class FXMLController extends Main implements Initializable {
         });
     }
 
-    public void actionCBType(ComboBox<String> type, GridPane gridCommune, GridPane gridMedecin, GridPane gridMalade, GridPane gridInfirmier) {
-        //////////////////////////////////////////////////////////////
+    public void actionCBType(ComboBox<String> type, GridPane gridCommune, GridPane gridMedecin, GridPane gridMalade, GridPane gridInfirmier, DatePicker dateEntree, DatePicker dateSortie) {
+
         type.setOnAction((event) -> {
             requete = type.getValue();
             gridCommune.setVisible(false);
@@ -386,7 +391,7 @@ public class FXMLController extends Main implements Initializable {
             gridMalade.setVisible(false);
             gridInfirmier.setVisible(false);
             gridCode1.setVisible(false);
-            
+
             if ("docteur".equals(requete)) {
                 gridCommune.setVisible(true);
                 gridMedecin.setVisible(true);
@@ -405,12 +410,68 @@ public class FXMLController extends Main implements Initializable {
                 gridMalade.setVisible(true);
                 actionCBMutuelle();
                 actionCBChambre();
+                actionDatePicker(dateEntree, "entree");
+                actionDatePicker(dateSortie, "sortie");
             }
         });
-        /////////////////////////////////////////////////////////////
 
-        // A toi de remplir Louis
     }
+
+    //////////////////////////////////////////////////////////////////////////////////////
+    public void actionDatePicker(DatePicker date, String type) {
+        String pattern = "yyyy-MM-dd";
+
+        date.setPromptText(pattern.toLowerCase());
+        System.out.println(date.getClass().getName());
+        date.setConverter(new StringConverter<LocalDate>() {
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
+
+            @Override
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    //System.out.println(dateFormatter.format(date));
+                    if(type.equalsIgnoreCase("entree")){
+                        hospitalisation.setDateE(dateFormatter.format(date));
+                        System.out.println("dateE : " + hospitalisation.getDateE());
+                        requete(malade);
+                    }
+                    if(type.equalsIgnoreCase("sortie")){
+                        hospitalisation.setDateE(dateFormatter.format(date));
+                        System.out.println("dateS : " + hospitalisation.getDateS());
+                        requete(malade);
+                    }
+                    return dateFormatter.format(date);
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    return LocalDate.parse(string, dateFormatter);
+                } else {
+                    return null;
+                }
+            }
+        });
+    }
+    
+    
+    /*public void afficherDatePickerE() {
+    
+    LocalDate date = dateEntree.getValue();
+    //System.out.println("Selected date: " + date);
+    //requete(malade);
+    }
+    
+    public void afficherDatePickerS() {
+    
+    LocalDate date = dateSortie.getValue();
+    //System.out.println("Selected date: " + date);
+    //requete(malade);
+    }*/
+    ////////////////////////////////////////////////////////////////////////////////////////
 
     // Rempli l'onglet liste patients avec les informations provenant de la barre
     public void listePatients() {
@@ -431,6 +492,145 @@ public class FXMLController extends Main implements Initializable {
      }else System.out.println("pas de nom");
      });
      }*/
+    public void popup(String ressource, String titre) {
+        try {
+            popup = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource(ressource));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            popup.setTitle(titre);
+            popup.initModality(Modality.WINDOW_MODAL);
+            popup.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            popup.setScene(scene);
+
+            //PopupsaisienumeroController controleur = loader.getController();
+            //controller.setDialogStage(popup);
+            //controller.setPerson(person);
+            // Show the dialog and wait until the user closes it
+            popup.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void Ajouter(ActionEvent event) {
+
+        tabPane.getTabs().get(5).getContent().setDisable(false);
+        tabPane.getSelectionModel().select(5);
+        actionCBType(type1, gridCommune1, gridMedecin1, gridMalade1, gridInfirmier1, dateEntree1, dateSortie1);
+        initCBType(type1, "docteur");
+        initCBMutuelle(mutuelle1);
+        initCBNumeroChambre(numeroChambre1);
+        initCBSpecialite(specialite1);
+        initCBRotation(rotation1);
+        initCBCodeService(codeService1);
+
+    }
+
+    public void Valider(ActionEvent event) {
+
+        String typeSelect = type1.getValue();
+        String codemutuelle;
+        if (typeSelect.equalsIgnoreCase("docteur") || typeSelect.equalsIgnoreCase("infirmier")) {
+            typeRequete = "employe";
+            codemutuelle = code1.getText();
+        } else {
+            typeRequete = "malade";
+            codemutuelle = mutuelle1.getValue().substring(0, mutuelle1.getValue().length() - 1);
+        }
+        requete = "INSERT INTO " + typeRequete + " VALUES ('" + numero1.getText() + "', '" + nom1.getText() + "', '" + prenom1.getText() + "', '" + adresse1.getText() + "', '" + telephone1.getText() + "', '" + codemutuelle + "')";
+        System.out.println(requete);
+        insertion(requete);
+
+        if (typeSelect.equalsIgnoreCase("docteur")) {
+            requete = "INSERT INTO  docteur  VALUES ('" + numero1.getText() + "', '" + specialite1.getValue().substring(0, specialite1.getValue().length() - 1) + "')";
+            System.out.println(requete);
+            insertion(requete);
+        }
+        if (typeSelect.equalsIgnoreCase("infirmier")) {
+            requete = "INSERT INTO  infirmier  VALUES ('" + numero1.getText() + "', '" + codeService1.getValue().substring(0, codeService1.getValue().length() - 1) + "', '" + rotation1.getValue().substring(0, rotation1.getValue().length() - 1) + "', '" + salaire1.getText() + "')";
+            System.out.println(requete);
+            insertion(requete);
+        }
+        if (typeSelect.equalsIgnoreCase("malade")) {
+            requete = "INSERT INTO  hospitalisation  VALUES ('" + numero1.getText() + "', '1', '" + numeroChambre1.getValue().substring(0, numeroChambre1.getValue().length() - 1) + "', '1', '1', '1')";
+            System.out.println(requete);
+            insertion(requete);
+        }
+
+    }
+
+    public void insertion(String requete) {
+        try {
+            maconnexion.getStmt().executeUpdate(requete);
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public String list_get_zero(String requete) {
+        try {
+            liste = maconnexion.remplirChampsRequete(requete);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return liste.get(0);
+    }
+
+    public void Modifier(ActionEvent event) {
+
+        int j = 0;
+        char a;
+        String typeSelect = type.getValue();
+        for (int i = 0; i < 4; i++) {
+            System.out.println(i);
+            a = personneTemporaire.charAt(i);
+            if (a == ',') {
+                j = i;
+            }
+        }
+        lala = personneTemporaire.substring(0, j);
+        System.out.println(lala);
+        tabPane.getTabs().get(5).getContent().setDisable(false);
+        tabPane.getSelectionModel().select(5);
+        actionCBType(type1, gridCommune1, gridMedecin1, gridMalade1, gridInfirmier1, dateEntree1, dateSortie1);
+        initCBType(type1, type.getValue());
+        initCBMutuelle(mutuelle1);
+        initCBNumeroChambre(numeroChambre1);
+        initCBSpecialite(specialite1);
+        initCBRotation(rotation1);
+        initCBCodeService(codeService1);
+        //tabPane.getSelectionModel().select(5).setVisible(true);
+        if (typeSelect.equalsIgnoreCase("docteur") || typeSelect.equalsIgnoreCase("infirmier")) {
+            typeRequete = "employe";
+        } else {
+            typeRequete = "malade";
+        }
+        numero1.setText(lala);
+        nom1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".nom FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
+        prenom1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".prenom FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
+        if (typeSelect.equalsIgnoreCase("docteur")) {
+            specialite1.setValue(list_get_zero("SELECT DISTINCT " + typeSelect + ".specialite FROM docteur docteur WHERE " + typeSelect + ".no_" + typeSelect + " = '" + lala + "'\n"));
+        }
+        if (typeSelect.equalsIgnoreCase("malade")) {
+            //dateEntree1.(list_get_zero("SELECT DISTINCT hospitalisation.no_chambre FROM hospitalisation hospitalisation WHERE hospitalisation.no_" + typeSelect + " = '"+lala+"'\n" )));
+            numeroChambre1.setValue(list_get_zero("SELECT DISTINCT hospitalisation.no_chambre FROM hospitalisation hospitalisation WHERE hospitalisation.no_" + typeSelect + " = '" + lala + "'\n"));
+            mutuelle1.setValue(list_get_zero("SELECT DISTINCT " + typeSelect + ".mutuelle FROM malade malade WHERE " + typeSelect + ".no_" + typeSelect + " = '" + lala + "'\n"));
+        }
+        if (typeSelect.equalsIgnoreCase("infirmier")) {
+            rotation1.setValue(list_get_zero("SELECT DISTINCT infirmier.rotation FROM infirmier infirmier WHERE infirmier.no_" + typeSelect + " = '" + lala + "'\n"));
+            codeService1.setValue(list_get_zero("SELECT DISTINCT infirmier.code_service FROM infirmier infirmier WHERE infirmier.no_" + typeSelect + " = '" + lala + "'\n"));
+        }
+        
+
+    }
+
+    
+
     @FXML
     public void actionTF(TextField type, Personne personne) {
         if (type.equals(nom)) {
@@ -472,144 +672,6 @@ public class FXMLController extends Main implements Initializable {
         }
     }
 
-    public void popup(String ressource, String titre) {
-        try {
-            popup = new Stage();
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource(ressource));
-            AnchorPane page = (AnchorPane) loader.load();
-
-            popup.setTitle(titre);
-            popup.initModality(Modality.WINDOW_MODAL);
-            popup.initOwner(primaryStage);
-            Scene scene = new Scene(page);
-            popup.setScene(scene);
-
-            //PopupsaisienumeroController controleur = loader.getController();
-            //controller.setDialogStage(popup);
-            //controller.setPerson(person);
-            // Show the dialog and wait until the user closes it
-            popup.showAndWait();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void Ajouter(ActionEvent event) {
-       
-        tabPane.getTabs().get(5).getContent().setDisable(false);
-        tabPane.getSelectionModel().select(5);
-        actionCBType(type1, gridCommune1, gridMedecin1, gridMalade1, gridInfirmier1);
-        initCBType(type1, "docteur");
-        initCBMutuelle(mutuelle1);
-        initCBNumeroChambre(numeroChambre1);
-        initCBSpecialite(specialite1);
-        initCBRotation(rotation1);
-        initCBCodeService(codeService1);
-        
-        
-    }
-    
-    public void Valider(ActionEvent event){
-        
-        String typeSelect = type1.getValue();
-        String codemutuelle;
-        if (typeSelect.equalsIgnoreCase("docteur") || typeSelect.equalsIgnoreCase("infirmier")) {
-            typeRequete = "employe";
-            codemutuelle = code1.getText();
-        } else {
-            typeRequete = "malade";
-            codemutuelle = mutuelle1.getValue().substring(0, mutuelle1.getValue().length() - 1);
-        }
-        requete = "INSERT INTO " + typeRequete + " VALUES ('" + numero1.getText() + "', '" + nom1.getText() + "', '" + prenom1.getText() + "', '" + adresse1.getText() + "', '" + telephone1.getText() + "', '" + codemutuelle + "')";
-        System.out.println(requete);
-        insertion(requete);
-        
-        if (typeSelect.equalsIgnoreCase("docteur")){
-            requete = "INSERT INTO  docteur  VALUES ('" + numero1.getText() + "', '" + specialite1.getValue().substring(0, specialite1.getValue().length() - 1) + "')";
-            System.out.println(requete);
-            insertion(requete);
-        }
-        if (typeSelect.equalsIgnoreCase("infirmier")){
-            requete = "INSERT INTO  infirmier  VALUES ('" + numero1.getText() + "', '" + codeService1.getValue().substring(0, codeService1.getValue().length() - 1) + "', '" + rotation1.getValue().substring(0, rotation1.getValue().length() - 1) +"', '" + salaire1.getText() + "')";
-            System.out.println(requete);
-            insertion(requete);
-        }
-        if (typeSelect.equalsIgnoreCase("malade")){
-        requete = "INSERT INTO  hospitalisation  VALUES ('" + numero1.getText() + "', '1', '" + numeroChambre1.getValue().substring(0, numeroChambre1.getValue().length() - 1) + "', '1', '1', '1')";
-        System.out.println(requete);
-        insertion(requete);
-        }
-        
-    }
-    
-    public void insertion(String requete){
-        try {
-            maconnexion.getStmt().executeUpdate(requete);
-        } catch (SQLException ex) {
-            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public String list_get_zero(String requete) {
-        try {
-            liste = maconnexion.remplirChampsRequete(requete);
-
-        } catch (SQLException ex) {
-            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return liste.get(0);
-    }
-
-    public void Modifier(ActionEvent event) {
-        
-        int j = 0;
-        char a;
-        String typeSelect = type.getValue();
-        for (int i = 0; i < 4; i++) {
-            System.out.println(i);
-            a = personneTemporaire.charAt(i);
-            if (a == ',') {
-                j = i;
-            } 
-        }
-        lala = personneTemporaire.substring(0, j);
-        System.out.println(lala);
-        tabPane.getTabs().get(5).getContent().setDisable(false);
-        tabPane.getSelectionModel().select(5);
-        actionCBType(type1, gridCommune1, gridMedecin1, gridMalade1, gridInfirmier1);
-        initCBType(type1, type.getValue());
-        initCBMutuelle(mutuelle1);
-        initCBNumeroChambre(numeroChambre1);
-        initCBSpecialite(specialite1);
-        initCBRotation(rotation1);
-        initCBCodeService(codeService1);
-        //tabPane.getSelectionModel().select(5).setVisible(true);
-        if (typeSelect.equalsIgnoreCase("docteur") || typeSelect.equalsIgnoreCase("infirmier")) {
-            typeRequete = "employe";
-        } else {
-            typeRequete = "malade";
-        }
-        numero1.setText(lala);
-        nom1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".nom FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
-        prenom1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".prenom FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
-        if (typeSelect.equalsIgnoreCase("docteur")) {
-            specialite1.setValue(list_get_zero("SELECT DISTINCT " + typeSelect + ".specialite FROM docteur docteur WHERE " + typeSelect + ".no_" + typeSelect + " = '" + lala + "'\n"));
-        }
-        if (typeSelect.equalsIgnoreCase("malade")) {
-            //dateEntree1.(list_get_zero("SELECT DISTINCT hospitalisation.no_chambre FROM hospitalisation hospitalisation WHERE hospitalisation.no_" + typeSelect + " = '"+lala+"'\n" )));
-            numeroChambre1.setValue(list_get_zero("SELECT DISTINCT hospitalisation.no_chambre FROM hospitalisation hospitalisation WHERE hospitalisation.no_" + typeSelect + " = '" + lala + "'\n"));
-            mutuelle1.setValue(list_get_zero("SELECT DISTINCT " + typeSelect + ".mutuelle FROM malade malade WHERE " + typeSelect + ".no_" + typeSelect + " = '" + lala + "'\n"));
-        }
-        if (typeSelect.equalsIgnoreCase("infirmier")) {
-            rotation1.setValue(list_get_zero("SELECT DISTINCT infirmier.rotation FROM infirmier infirmier WHERE infirmier.no_" + typeSelect + " = '" + lala + "'\n"));
-            codeService1.setValue(list_get_zero("SELECT DISTINCT infirmier.code_service FROM infirmier infirmier WHERE infirmier.no_" + typeSelect + " = '" + lala + "'\n"));
-        }
-
-    }
-
-   
     public void actionTFnom(KeyEvent event) {
         if (nom.getLength() > 0) {
             if (type.getValue().equalsIgnoreCase("docteur")) {
@@ -721,6 +783,18 @@ public class FXMLController extends Main implements Initializable {
             requete += "AND malade.no_malade = hospitalisation.no_malade\n"
                     + "AND hospitalisation.no_chambre ='" + hospitalisation.getNo_chambre() + "'\n";
         }
+        if (typeSelect.equalsIgnoreCase("malade") && hospitalisation.getNo_chambre() != null) {
+            requete += "AND malade.no_malade = hospitalisation.no_malade\n"
+                    + "AND hospitalisation.no_chambre ='" + hospitalisation.getNo_chambre() + "'\n";
+        }
+        if (typeSelect.equalsIgnoreCase("malade") && hospitalisation.getDateE() != null){
+            requete += "AND malade.no_malade = hospitalisation.no_malade\n"
+                    + "AND hospitalisation.date_entree ='" + hospitalisation.getDateE() + "'\n";
+        }
+        if (typeSelect.equalsIgnoreCase("malade") && hospitalisation.getDateS() != null){
+            requete += "AND malade.no_malade = hospitalisation.no_malade\n"
+                    + "AND hospitalisation.date_entree ='" + hospitalisation.getDateS() + "'\n";
+        }
 
         System.out.println(requete);
         try {
@@ -764,7 +838,7 @@ public class FXMLController extends Main implements Initializable {
         gridMalade1.setVisible(false);
         gridInfirmier1.setVisible(false);
         //actionCBMedecin();
-        actionCBType(type, gridCommune, gridMedecin, gridMalade, gridInfirmier);
+        actionCBType(type, gridCommune, gridMedecin, gridMalade, gridInfirmier, dateEntree, dateSortie);
         //actionTFnom();
 
         ////////////////////////////////////////

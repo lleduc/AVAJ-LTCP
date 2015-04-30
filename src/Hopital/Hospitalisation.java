@@ -14,10 +14,29 @@ public class Hospitalisation {
     private String code_service;
     private String no_chambre;
     private int lit;
+    private String dateE;
+    private String dateS;
+    
     
     public Hospitalisation()
     {
         
+    }
+
+    public String getDateE() {
+        return dateE;
+    }
+
+    public void setDateE(String dateE) {
+        this.dateE = dateE;
+    }
+
+    public String getDateS() {
+        return dateS;
+    }
+
+    public void setDateS(String dateS) {
+        this.dateS = dateS;
     }
 
     public int getNo_malade() {
