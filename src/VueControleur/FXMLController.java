@@ -32,6 +32,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -118,9 +119,18 @@ public class FXMLController extends Main implements Initializable {
     private GridPane gridInfirmier;
 
     //Variables de la fenêtre Liste patients
+///////////////////////////////////////////////////////////
     @FXML
-    private TableView patients;
+    private TableView<Malade> patients;
+    @FXML
+    private TableColumn<Malade, Integer> cnum;
+    @FXML
+    private TableColumn<Malade, String> cprenom;
+    @FXML
+    private TableColumn<Malade, String> cnom;
 
+    ObservableList<Malade> PatientData = FXCollections.observableArrayList();
+    //////////////////////////////////////////////////////
     //Variables de la fenêtre de connection
     @FXML
     private TextField identifiant, MDP;
@@ -472,10 +482,55 @@ public class FXMLController extends Main implements Initializable {
     ////////////////////////////////////////////////////////////////////////////////////////
     // Rempli l'onglet liste patients avec les informations provenant de la barre
     public void listePatients() {
-        // A toi de remplir Philippine
-        // l'objet de gauche dans l'onglet est un TableView il est défini en haut, il s'appelle patients
-        // c'est juste le point de départ, tu n'as pas à te limiter à un seul sous programme
-        // ce sous programme est appelé dans initConnection, après la connection à la bdd
+        int numMalade = 0;
+        String prenom, nom;
+        int nbMalade = 0;
+        ArrayList<String> liste2 = null;
+        ArrayList<String> liste3 = null;
+        int pos = 0;
+
+        ///////////////////////////////////////////////////////
+        try {
+            requete = "SELECT COUNT(DISTINCT no_malade) FROM malade";
+            liste = maconnexion.remplirChampsRequete(requete);
+            nbMalade = Integer.parseInt(liste.get(0).substring(0, liste.get(0).length() - 1));
+            System.out.println(nbMalade);
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            requete = "SELECT no_malade, nom FROM malade";
+            liste = maconnexion.remplirChampsRequete(requete);
+            //numMalade = Integer.parseInt(liste.get(0).substring(0, liste.get(0).length()-1));
+            requete = "SELECT prenom FROM malade";
+            liste2 = maconnexion.remplirChampsRequete(requete);
+            requete = "SELECT nom FROM malade";
+            liste3 = maconnexion.remplirChampsRequete(requete);
+            //System.out.println(nbMalade);    
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for (int i = 0; i < nbMalade; i++) {
+
+            for (int j = 0; j < 4; j++) {
+                char a = liste.get(i).charAt(j);
+                if (a == ',') {
+                    pos = j;
+                }
+            }
+            numMalade = Integer.parseInt(liste.get(i).substring(0, pos));
+
+            prenom = liste2.get(i);
+            nom = liste3.get(i);
+            PatientData.add(new Malade(numMalade, prenom, nom));
+
+        }
+        cnum.setCellValueFactory(cellData -> cellData.getValue().getNumProperty().asObject());
+        cprenom.setCellValueFactory(cellData -> cellData.getValue().getSurnameProperty());
+        cnom.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        patients.setItems(PatientData);
+        ////////////////////////////////////////////////////////////
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -652,9 +707,9 @@ public class FXMLController extends Main implements Initializable {
         prenom1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".prenom FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
         adresse1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".adresse FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
         telephone1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".tel FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
-        code1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".code FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
-        if (typeSelect.equalsIgnoreCase("docteur")) {
 
+        if (typeSelect.equalsIgnoreCase("docteur")) {
+            code1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".code FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
             specialite1.setValue(list_get_zero("SELECT DISTINCT " + typeSelect + ".specialite FROM docteur docteur WHERE " + typeSelect + ".no_" + typeSelect + " = '" + lala + "'\n"));
         }
 
@@ -662,10 +717,11 @@ public class FXMLController extends Main implements Initializable {
 
             numeroChambre1.setValue(list_get_zero("SELECT DISTINCT hospitalisation.no_chambre FROM hospitalisation hospitalisation WHERE hospitalisation.no_" + typeSelect + " = '" + lala + "'\n"));
             mutuelle1.setValue(list_get_zero("SELECT DISTINCT " + typeSelect + ".mutuelle FROM malade malade WHERE " + typeSelect + ".no_" + typeSelect + " = '" + lala + "'\n"));
-            dateEntree1.setValue(LocalDate.MIN);
-            dateSortie1.setValue(LocalDate.MIN);
+            //dateEntree1.setValue(LocalDate.MIN);
+            //dateSortie1.setValue(LocalDate.MIN);
         }
         if (typeSelect.equalsIgnoreCase("infirmier")) {
+            code1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".code FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
             rotation1.setValue(list_get_zero("SELECT DISTINCT infirmier.rotation FROM infirmier infirmier WHERE infirmier.no_" + typeSelect + " = '" + lala + "'\n"));
             codeService1.setValue(list_get_zero("SELECT DISTINCT infirmier.code_service FROM infirmier infirmier WHERE infirmier.no_" + typeSelect + " = '" + lala + "'\n"));
         }
@@ -767,13 +823,13 @@ public class FXMLController extends Main implements Initializable {
             requete += " AND " + typeRequete + ".no_" + typeRequete + " = '";
             switch (typeSelect) {
                 case "docteur":
-                    requete += docteur.getNumero() + "%'\n";
+                    requete += docteur.getNumero() + "'\n";
                     break;
                 case "infirmier":
-                    requete += infirmier.getNumero() + "%'\n";
+                    requete += infirmier.getNumero() + "'\n";
                     break;
                 case "malade":
-                    requete += malade.getNumero() + "%'\n";
+                    requete += malade.getNumero() + "'\n";
                     break;
             }
             //System.out.println(requete);
@@ -844,7 +900,11 @@ public class FXMLController extends Main implements Initializable {
             // afficher les lignes de la requete selectionnee a partir de la liste
             for (int i = 0; i < liste.size(); i++) {
                 System.out.println(liste.get(i));
-                //resultat.insertText(i, liste.get(i));
+                resultat.setText("");
+                for (String res : liste ) {
+			resultat.appendText(res + "\n");
+		}
+                
                 personneTemporaire = liste.get(0);
             }
             //System.out.println(personneTemporaire);

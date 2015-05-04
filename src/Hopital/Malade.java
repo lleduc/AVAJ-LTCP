@@ -13,11 +13,13 @@ public class Malade extends Personne {
     
     private String mutuelle;
     
-    public Malade()
-    {
-        
+    public Malade(){
     }
-
+   
+    public Malade(int num, String prenom, String nom)
+    {
+        super(num, prenom, nom);
+    }
     
     public String getMutuelle() {
         return mutuelle;

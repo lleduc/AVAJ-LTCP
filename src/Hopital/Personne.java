@@ -5,6 +5,9 @@
  */
 package Hopital;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+
 /**
  *
  * @author thomas
@@ -16,6 +19,21 @@ public class Personne {
     private String prenom = "";
     private String adresse = "";
     private String tel = "";
+    
+    //////////////////////////////
+    
+   
+    private  SimpleIntegerProperty num;
+    private  SimpleStringProperty name;
+    private  SimpleStringProperty surname;
+
+    public Personne(int num, String name, String surname) {
+        this.num = new SimpleIntegerProperty(num);
+        this.name = new SimpleStringProperty(name);
+        this.surname = new SimpleStringProperty(surname);
+    }
+    
+    ///////////////////////////////////////
 
     public Personne() {
         
@@ -60,5 +78,51 @@ public class Personne {
     public void setTel(String tel) {
         this.tel = tel;
     }
+    
+     /////////////////////////////////////////////////////
+    
+    
+    public SimpleIntegerProperty getNumProperty() {
+        return num;
+    }
+    public void setNum(SimpleIntegerProperty num) {
+        this.num = num;
+    }
+    public int getNum() {
+        return num.get();
+    }
+    public void setNum(int num) {
+        this.num.set(num);
+    }
+
+    public SimpleStringProperty getNameProperty() {
+        return name;
+    }
+    public void setName(SimpleStringProperty name) {
+        this.name = name;
+    }
+    public String getName() {
+        return name.get();
+    }
+    public void setName(String name) {
+        this.name.set(name);
+    }
+    
+    
+
+    public SimpleStringProperty getSurnameProperty() {
+        return surname;
+    }
+    public void setSurnameProperty(SimpleStringProperty surname) {
+        this.surname = surname;
+    }
+    public String getSurname() {
+        return surname.get();
+    }
+    public void setSurname(String surname){
+        this.surname.set(surname);
+    }
+
+    ////////////////////////////////////////////////////
     
 }
