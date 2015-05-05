@@ -130,6 +130,17 @@ public class FXMLController extends Main implements Initializable {
     private TableColumn<Malade, String> cnom;
 
     ObservableList<Malade> PatientData = FXCollections.observableArrayList();
+    
+    @FXML
+    private TextField servicep;
+    @FXML
+    private TextField medecinp;
+    @FXML
+    private TextField adressep;
+    @FXML
+    private TextField telephonep;
+    @FXML
+    private TextField mutuellep;
     //////////////////////////////////////////////////////
     //Variables de la fenêtre de connection
     @FXML
@@ -531,6 +542,34 @@ public class FXMLController extends Main implements Initializable {
         cnom.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
         patients.setItems(PatientData);
         ////////////////////////////////////////////////////////////
+    }
+    
+    @FXML
+    public void selectPatient(){
+        int num = 0;
+        Malade mal= patients.getSelectionModel().selectedItemProperty().get();
+        num = mal.getNum();
+        try {
+            //System.out.println(num);
+            //requete = "SELECT ";
+            requete = (maconnexion.remplirChampsRequete("SELECT code_service FROM hospitalisation WHERE "+ num +" = no_malade")).toString();
+            requete = requete.substring(1, requete.length() - 1);
+            servicep.setText(requete);
+            requete = (maconnexion.remplirChampsRequete("SELECT employe.nom FROM soigne soigne, employe employe WHERE "+ num +" = soigne.no_malade AND employe.no_employe = soigne.no_docteur")).toString();
+            requete = requete.substring(1, requete.length() - 1);
+            medecinp.setText(requete);
+            requete = (maconnexion.remplirChampsRequete("SELECT adresse FROM malade WHERE "+ num +" = no_malade")).toString();
+            requete = requete.substring(1, requete.length() - 1);
+            adressep.setText(requete);
+            requete = (maconnexion.remplirChampsRequete("SELECT tel FROM malade WHERE "+ num +" = no_malade")).toString();
+            requete = requete.substring(1, requete.length() - 1);
+            telephonep.setText(requete);
+            requete = (maconnexion.remplirChampsRequete("SELECT mutuelle FROM malade WHERE "+ num +" = no_malade")).toString();
+            requete = requete.substring(1, requete.length() - 1);
+            mutuellep.setText(requete);
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
