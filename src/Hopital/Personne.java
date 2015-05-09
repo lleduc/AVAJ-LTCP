@@ -27,7 +27,7 @@ public class Personne {
     private  SimpleStringProperty name;
     private  SimpleStringProperty surname;
 
-    public Personne(int num, String name, String surname) {
+    public Personne(int num, String surname, String name) {
         this.num = new SimpleIntegerProperty(num);
         this.name = new SimpleStringProperty(name);
         this.surname = new SimpleStringProperty(surname);
