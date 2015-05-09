@@ -130,7 +130,7 @@ public class FXMLController extends Main implements Initializable {
     private TableColumn<Malade, String> cnom;
 
     ObservableList<Malade> PatientData = FXCollections.observableArrayList();
-    
+
     @FXML
     private TextField servicep;
     @FXML
@@ -239,6 +239,7 @@ public class FXMLController extends Main implements Initializable {
                 for (int i = 1; i <= 4; i++) {
                     tabPane.getTabs().get(i).getContent().setDisable(false);
                 }
+                tabPane.getSelectionModel().select(1);
                 //////////////////////////////////////////////////////
 
             } catch (SQLException | ClassNotFoundException ex) {
@@ -543,28 +544,28 @@ public class FXMLController extends Main implements Initializable {
         patients.setItems(PatientData);
         ////////////////////////////////////////////////////////////
     }
-    
+
     @FXML
-    public void selectPatient(){
+    public void selectPatient() {
         int num = 0;
-        Malade mal= patients.getSelectionModel().selectedItemProperty().get();
+        Malade mal = patients.getSelectionModel().selectedItemProperty().get();
         num = mal.getNum();
         try {
             //System.out.println(num);
             //requete = "SELECT ";
-            requete = (maconnexion.remplirChampsRequete("SELECT code_service FROM hospitalisation WHERE "+ num +" = no_malade")).toString();
+            requete = (maconnexion.remplirChampsRequete("SELECT code_service FROM hospitalisation WHERE " + num + " = no_malade")).toString();
             requete = requete.substring(1, requete.length() - 1);
             servicep.setText(requete);
-            requete = (maconnexion.remplirChampsRequete("SELECT employe.nom FROM soigne soigne, employe employe WHERE "+ num +" = soigne.no_malade AND employe.no_employe = soigne.no_docteur")).toString();
+            requete = (maconnexion.remplirChampsRequete("SELECT employe.nom FROM soigne soigne, employe employe WHERE " + num + " = soigne.no_malade AND employe.no_employe = soigne.no_docteur")).toString();
             requete = requete.substring(1, requete.length() - 1);
             medecinp.setText(requete);
-            requete = (maconnexion.remplirChampsRequete("SELECT adresse FROM malade WHERE "+ num +" = no_malade")).toString();
+            requete = (maconnexion.remplirChampsRequete("SELECT adresse FROM malade WHERE " + num + " = no_malade")).toString();
             requete = requete.substring(1, requete.length() - 1);
             adressep.setText(requete);
-            requete = (maconnexion.remplirChampsRequete("SELECT tel FROM malade WHERE "+ num +" = no_malade")).toString();
+            requete = (maconnexion.remplirChampsRequete("SELECT tel FROM malade WHERE " + num + " = no_malade")).toString();
             requete = requete.substring(1, requete.length() - 1);
             telephonep.setText(requete);
-            requete = (maconnexion.remplirChampsRequete("SELECT mutuelle FROM malade WHERE "+ num +" = no_malade")).toString();
+            requete = (maconnexion.remplirChampsRequete("SELECT mutuelle FROM malade WHERE " + num + " = no_malade")).toString();
             requete = requete.substring(1, requete.length() - 1);
             mutuellep.setText(requete);
         } catch (SQLException ex) {
@@ -607,8 +608,28 @@ public class FXMLController extends Main implements Initializable {
         }
     }
 
+    /*
+     public void Ajouter(ActionEvent event) {
+     ajout_modif = true;
+     tabPane.getTabs().get(5).getContent().setDisable(false);
+     tabPane.getSelectionModel().select(5);
+     actionCBType(type1, gridCommune1, gridMedecin1, gridMalade1, gridInfirmier1, dateEntree1, dateSortie1);
+     initCBType(type1, "docteur");
+     initCBMutuelle(mutuelle1);
+     initCBNumeroChambre(numeroChambre1);
+     initCBSpecialite(specialite1);
+     initCBRotation(rotation1);
+     initCBCodeService(codeService1);
+
+     }
+     */
     public void Ajouter(ActionEvent event) {
         ajout_modif = true;
+        String str;
+        int a = 0;
+        int b = 0;
+        String codemutuelle;
+
         tabPane.getTabs().get(5).getContent().setDisable(false);
         tabPane.getSelectionModel().select(5);
         actionCBType(type1, gridCommune1, gridMedecin1, gridMalade1, gridInfirmier1, dateEntree1, dateSortie1);
@@ -618,9 +639,116 @@ public class FXMLController extends Main implements Initializable {
         initCBSpecialite(specialite1);
         initCBRotation(rotation1);
         initCBCodeService(codeService1);
+        String typeSelect = type1.getValue();
+        if (typeSelect.equalsIgnoreCase("docteur") || typeSelect.equalsIgnoreCase("infirmier")) {
+            typeRequete = "employe";
+            codemutuelle = code1.getText();
+        } else {
+            typeRequete = "malade";
+            codemutuelle = mutuelle1.getValue().substring(0, mutuelle1.getValue().length() - 1);
+        }
+        requete = "SELECT " + typeRequete + ".no_" + typeRequete + " FROM " + typeRequete + " " + typeRequete;
+        try {
+            liste = maconnexion.remplirChampsRequete(requete);
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        for (int i = 0; i < liste.size(); i++) {
+            System.out.println(liste.get(i));
+
+        }
+
+        str = liste.get(0);
+        str = str.substring(0, str.length() - 1);
+        a = Integer.parseInt(str);
+
+        for (int i = 0; i < liste.size(); i++) {
+            b = Integer.parseInt(liste.get(i).substring(0, liste.get(i).length() - 1));
+            System.out.println("VAL" + liste.get(i));
+
+            if (b > a) {
+                a = b;
+            }
+        }
+        a = a + 1;
+        numero1.setText(Integer.toString(a));
 
     }
 
+    /*
+     public void Valider(ActionEvent event) {
+
+     String typeSelect = type1.getValue();
+     String codemutuelle;
+
+     if (typeSelect.equalsIgnoreCase("docteur") || typeSelect.equalsIgnoreCase("infirmier")) {
+     typeRequete = "employe";
+     codemutuelle = code1.getText();
+     } else {
+     typeRequete = "malade";
+     codemutuelle = mutuelle1.getValue().substring(0, mutuelle1.getValue().length() - 1);
+     }
+     if (ajout_modif == true) {
+     requete = "INSERT INTO " + typeRequete + " VALUES ('" + numero1.getText() + "', '" + nom1.getText() + "', '" + prenom1.getText() + "', '" + adresse1.getText() + "', '" + telephone1.getText() + "', '" + codemutuelle + "')";
+     System.out.println(requete);
+     insertion(requete);
+
+     if (typeSelect.equalsIgnoreCase("docteur")) {
+     requete = "INSERT INTO  docteur  VALUES ('" + numero1.getText() + "', '" + specialite1.getValue().substring(0, specialite1.getValue().length() - 1) + "')";
+     System.out.println(requete);
+     insertion(requete);
+     }
+     if (typeSelect.equalsIgnoreCase("infirmier")) {
+     requete = "INSERT INTO  infirmier  VALUES ('" + numero1.getText() + "', '" + codeService1.getValue().substring(0, codeService1.getValue().length() - 1) + "', '" + rotation1.getValue().substring(0, rotation1.getValue().length() - 1) + "', '" + salaire1.getText() + "')";
+     System.out.println(requete);
+     insertion(requete);
+     }
+     if (typeSelect.equalsIgnoreCase("malade")) {
+     requete = "INSERT INTO  hospitalisation  VALUES ('" + numero1.getText() + "', '1', '" + numeroChambre1.getValue().substring(0, numeroChambre1.getValue().length() - 1) + "', '1', '1', '1')";
+     System.out.println(requete);
+     insertion(requete);
+     }
+     }
+     if (ajout_modif == false) {
+     if (typeSelect.equalsIgnoreCase("docteur") || typeSelect.equalsIgnoreCase("infirmier")) {
+     typeRequete = "employe";
+     } else {
+     typeRequete = "malade";
+     }
+
+     requete = " UPDATE " + typeRequete + " SET no_" + typeRequete + " = '" + lala + "' , nom = '" + nom1.getText() + "' ,prenom = '" + prenom1.getText() + "' ,adresse = '" + adresse1.getText() + "' ,tel = '" + telephone1.getText() + "'  WHERE no_" + typeRequete + " =" + lala;
+     System.out.println(requete);
+     insertion(requete);
+
+     if (typeSelect.equalsIgnoreCase("malade")) {
+     requete = " UPDATE " + typeRequete + " SET mutuelle = '" + mutuelle1.getValue() + "'  WHERE no_" + typeRequete + " =" + lala;
+     System.out.println(requete);
+     insertion(requete);
+     }
+
+     if (typeRequete.equalsIgnoreCase("employe")) {
+     requete = " UPDATE " + typeRequete + " SET code = '" + code1.getText() + "'  WHERE no_" + typeRequete + " =" + lala;
+     System.out.println(requete);
+     insertion(requete);
+     }
+
+     if (typeSelect.equalsIgnoreCase("docteur")) {
+     requete = " UPDATE " + typeSelect + " SET specialite = '" + specialite1.getValue() + "'  WHERE no_" + typeSelect + " =" + lala;
+     System.out.println(requete);
+     insertion(requete);
+
+     }
+
+     if (typeSelect.equalsIgnoreCase("infirmier")) {
+     requete = " UPDATE " + typeSelect + " SET code_service = '" + codeService1.getValue() + "' , rotation = '" + rotation1.getValue() + "' , salaire = '" + salaire1.getText() + "' WHERE no_" + typeSelect + " =" + lala;
+     System.out.println(requete);
+     insertion(requete);
+
+     }
+
+     }
+     }
+     */
     public void Valider(ActionEvent event) {
 
         String typeSelect = type1.getValue();
@@ -633,7 +761,9 @@ public class FXMLController extends Main implements Initializable {
             typeRequete = "malade";
             codemutuelle = mutuelle1.getValue().substring(0, mutuelle1.getValue().length() - 1);
         }
+        // lorsque l'on veut ajouter une nouvelle ligne 
         if (ajout_modif == true) {
+
             requete = "INSERT INTO " + typeRequete + " VALUES ('" + numero1.getText() + "', '" + nom1.getText() + "', '" + prenom1.getText() + "', '" + adresse1.getText() + "', '" + telephone1.getText() + "', '" + codemutuelle + "')";
             System.out.println(requete);
             insertion(requete);
@@ -654,12 +784,8 @@ public class FXMLController extends Main implements Initializable {
                 insertion(requete);
             }
         }
+        //lorsque l'on veut modifier une ligne de la BDD
         if (ajout_modif == false) {
-            if (typeSelect.equalsIgnoreCase("docteur") || typeSelect.equalsIgnoreCase("infirmier")) {
-                typeRequete = "employe";
-            } else {
-                typeRequete = "malade";
-            }
 
             requete = " UPDATE " + typeRequete + " SET no_" + typeRequete + " = '" + lala + "' , nom = '" + nom1.getText() + "' ,prenom = '" + prenom1.getText() + "' ,adresse = '" + adresse1.getText() + "' ,tel = '" + telephone1.getText() + "'  WHERE no_" + typeRequete + " =" + lala;
             System.out.println(requete);
@@ -692,6 +818,37 @@ public class FXMLController extends Main implements Initializable {
             }
 
         }
+        mise_a_zero();
+        tabPane.getTabs().get(5).getContent().setDisable(true); //Si on valide, on interdit l'accès à l'onglet directement
+        tabPane.getSelectionModel().select(2);
+        listePatients();
+    }
+    
+    public void Annuler(ActionEvent event)
+    {
+        tabPane.getTabs().get(5).getContent().setDisable(true); //Si on annule, on interdit l'accès à l'onglet directement
+        tabPane.getSelectionModel().select(2);
+        mise_a_zero();
+        
+    }
+
+    public void mise_a_zero() {
+        //Remise à 0 des combobox 
+        specialite1.setValue(null);
+        type1.setValue(null);
+        mutuelle1.setValue(null);
+        rotation1.setValue(null);
+        codeService1.setValue(null);
+        numeroChambre1.setValue(null);
+        nom1.setText(null);
+        prenom1.setText(null);
+        numero1.setText(null);
+        code1.setText(null);
+        telephone1.setText(null);
+        adresse1.setText(null);
+        salaire1.setText(null);
+        dateEntree1.setValue(null);
+        dateSortie1.setValue(null);
     }
 
     public void insertion(String requete) {
@@ -712,6 +869,62 @@ public class FXMLController extends Main implements Initializable {
         return liste.get(0);
     }
 
+    /*
+     public void Modifier(ActionEvent event) {
+     ajout_modif = false;
+     int j = 0;
+     char a;
+     String typeSelect = type.getValue();
+     for (int i = 0; i < 4; i++) {
+     System.out.println(i);
+     a = personneTemporaire.charAt(i);
+     if (a == ',') {
+     j = i;
+     }
+     }
+     lala = personneTemporaire.substring(0, j);
+     System.out.println(lala);
+     tabPane.getTabs().get(5).getContent().setDisable(false);
+     tabPane.getSelectionModel().select(5);
+     actionCBType(type1, gridCommune1, gridMedecin1, gridMalade1, gridInfirmier1, dateEntree1, dateSortie1);
+     initCBType(type1, type.getValue());
+     initCBMutuelle(mutuelle1);
+     initCBNumeroChambre(numeroChambre1);
+     initCBSpecialite(specialite1);
+     initCBRotation(rotation1);
+     initCBCodeService(codeService1);
+     //tabPane.getSelectionModel().select(5).setVisible(true);
+     if (typeSelect.equalsIgnoreCase("docteur") || typeSelect.equalsIgnoreCase("infirmier")) {
+     typeRequete = "employe";
+     } else {
+     typeRequete = "malade";
+     }
+     numero1.setText(lala);
+     nom1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".nom FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
+     prenom1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".prenom FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
+     adresse1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".adresse FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
+     telephone1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".tel FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
+
+     if (typeSelect.equalsIgnoreCase("docteur")) {
+     code1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".code FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
+     specialite1.setValue(list_get_zero("SELECT DISTINCT " + typeSelect + ".specialite FROM docteur docteur WHERE " + typeSelect + ".no_" + typeSelect + " = '" + lala + "'\n"));
+     }
+
+     if (typeSelect.equalsIgnoreCase("malade")) {
+
+     numeroChambre1.setValue(list_get_zero("SELECT DISTINCT hospitalisation.no_chambre FROM hospitalisation hospitalisation WHERE hospitalisation.no_" + typeSelect + " = '" + lala + "'\n"));
+     mutuelle1.setValue(list_get_zero("SELECT DISTINCT " + typeSelect + ".mutuelle FROM malade malade WHERE " + typeSelect + ".no_" + typeSelect + " = '" + lala + "'\n"));
+     //dateEntree1.setValue(LocalDate.MIN);
+     //dateSortie1.setValue(LocalDate.MIN);
+     }
+     if (typeSelect.equalsIgnoreCase("infirmier")) {
+     code1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".code FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
+     rotation1.setValue(list_get_zero("SELECT DISTINCT infirmier.rotation FROM infirmier infirmier WHERE infirmier.no_" + typeSelect + " = '" + lala + "'\n"));
+     codeService1.setValue(list_get_zero("SELECT DISTINCT infirmier.code_service FROM infirmier infirmier WHERE infirmier.no_" + typeSelect + " = '" + lala + "'\n"));
+     }
+
+     }
+     */
     public void Modifier(ActionEvent event) {
         ajout_modif = false;
         int j = 0;
@@ -746,9 +959,9 @@ public class FXMLController extends Main implements Initializable {
         prenom1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".prenom FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
         adresse1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".adresse FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
         telephone1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".tel FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
-
+        code1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".code FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
         if (typeSelect.equalsIgnoreCase("docteur")) {
-            code1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".code FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
+
             specialite1.setValue(list_get_zero("SELECT DISTINCT " + typeSelect + ".specialite FROM docteur docteur WHERE " + typeSelect + ".no_" + typeSelect + " = '" + lala + "'\n"));
         }
 
@@ -756,15 +969,41 @@ public class FXMLController extends Main implements Initializable {
 
             numeroChambre1.setValue(list_get_zero("SELECT DISTINCT hospitalisation.no_chambre FROM hospitalisation hospitalisation WHERE hospitalisation.no_" + typeSelect + " = '" + lala + "'\n"));
             mutuelle1.setValue(list_get_zero("SELECT DISTINCT " + typeSelect + ".mutuelle FROM malade malade WHERE " + typeSelect + ".no_" + typeSelect + " = '" + lala + "'\n"));
-            //dateEntree1.setValue(LocalDate.MIN);
-            //dateSortie1.setValue(LocalDate.MIN);
+            dateEntree1.setValue(LocalDate.MIN);
+            dateSortie1.setValue(LocalDate.MIN);
         }
         if (typeSelect.equalsIgnoreCase("infirmier")) {
-            code1.setText(list_get_zero("SELECT DISTINCT " + typeRequete + ".code FROM employe employe, malade malade WHERE " + typeRequete + ".no_" + typeRequete + " = '" + lala + "'\n"));
             rotation1.setValue(list_get_zero("SELECT DISTINCT infirmier.rotation FROM infirmier infirmier WHERE infirmier.no_" + typeSelect + " = '" + lala + "'\n"));
             codeService1.setValue(list_get_zero("SELECT DISTINCT infirmier.code_service FROM infirmier infirmier WHERE infirmier.no_" + typeSelect + " = '" + lala + "'\n"));
         }
 
+    }
+
+    public void Supprimer(ActionEvent event) {
+        String typeSelect = type.getValue();
+        int j = 0;
+        char a;
+        if (typeSelect.equalsIgnoreCase("docteur") || typeSelect.equalsIgnoreCase("infirmier")) {
+            typeRequete = "employe";
+
+        } else {
+            typeRequete = "malade";
+
+        }
+        for (int i = 0; i < 4; i++) {
+            System.out.println(i);
+            a = personneTemporaire.charAt(i);
+            if (a == ',') {
+                j = i;
+            }
+        }
+        lala = personneTemporaire.substring(0, j);
+
+        requete = "DELETE FROM `" + typeRequete + "` WHERE `no_" + typeRequete + "`=" + lala;
+        System.out.println(requete);
+        insertion(requete);
+
+        listePatients();
     }
 
     @FXML
@@ -874,7 +1113,7 @@ public class FXMLController extends Main implements Initializable {
             //System.out.println(requete);
         }
         if (nom.getLength() > 0) {
-            requete += "AND " + typeRequete + ".nom LIKE '";
+            requete += " AND " + typeRequete + ".nom LIKE '";
             switch (typeSelect) {
                 case "docteur":
                     requete += docteur.getNom() + "%'\n";
@@ -889,7 +1128,7 @@ public class FXMLController extends Main implements Initializable {
             //System.out.println(requete);
         }
         if (prenom.getLength() > 0) {
-            requete += "AND " + typeRequete + ".prenom LIKE '";
+            requete += " AND " + typeRequete + ".prenom LIKE '";
             switch (typeSelect) {
                 case "docteur":
                     requete += docteur.getPrenom() + "%'\n";
@@ -939,13 +1178,12 @@ public class FXMLController extends Main implements Initializable {
             // afficher les lignes de la requete selectionnee a partir de la liste
             for (int i = 0; i < liste.size(); i++) {
                 System.out.println(liste.get(i));
-                resultat.setText("");
-                for (String res : liste ) {
-			resultat.appendText(res + "\n");
-		}
-                
                 personneTemporaire = liste.get(0);
             }
+            resultat.setText("");
+                for (String res : liste) {
+                    resultat.appendText(res + "\n");
+                }
             //System.out.println(personneTemporaire);
 
         } catch (SQLException ex) {

@@ -170,7 +170,7 @@
                            <items>
                               <Button mnemonicParsing="false" onAction="#Ajouter" text="Ajouter" />
                               <Button mnemonicParsing="false" onAction="#Modifier" text="Modifier" />
-                              <Button mnemonicParsing="false" text="Supprimer" />
+                              <Button mnemonicParsing="false" onAction="#Supprimer" text="Supprimer" />
                            </items>
                         </ToolBar>
                         <TextArea fx:id="resultat" layoutX="455.0" layoutY="56.0" prefHeight="404.0" prefWidth="292.0" />
@@ -335,7 +335,7 @@
                            </effect>
                            <items>
                               <Button fx:id="valider1" mnemonicParsing="false" onAction="#Valider" text="Valider" />
-                              <Button fx:id="annuler1" mnemonicParsing="false" text="Annuler" />
+                              <Button fx:id="annuler1" mnemonicParsing="false" onAction="#Annuler" text="Annuler" />
                            </items>
                         </ToolBar>
                         <GridPane layoutX="400.0" layoutY="67.0" prefHeight="60.0" prefWidth="345.0">
