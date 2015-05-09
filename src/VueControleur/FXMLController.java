@@ -239,6 +239,7 @@ public class FXMLController extends Main implements Initializable {
                 for (int i = 1; i <= 4; i++) {
                     tabPane.getTabs().get(i).getContent().setDisable(false);
                 }
+                tabPane.getTabs().get(0).getContent().setDisable(true);
                 tabPane.getSelectionModel().select(1);
                 //////////////////////////////////////////////////////
 
