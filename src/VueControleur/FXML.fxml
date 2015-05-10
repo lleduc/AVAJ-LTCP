@@ -188,60 +188,6 @@
                   </AnchorPane>
             </content>
           </Tab>
-            <Tab text="Rendez-Vous">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <Label layoutX="31.0" layoutY="29.0" text="Rechercher un rendez-vous" />
-                        <GridPane fx:id="gridCommune2" layoutX="31.0" layoutY="64.0" prefHeight="120.0" prefWidth="270.0">
-                           <children>
-                              <Label text="Numéro :" />
-                              <Label text="Nom  :" GridPane.rowIndex="1" />
-                              <Label text="Prénom :" GridPane.rowIndex="2" />
-                              <TextField fx:id="numero2" GridPane.columnIndex="1" />
-                              <TextField fx:id="nom2" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <TextField fx:id="prenom2" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <DatePicker GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                              <Label text="Date :" GridPane.rowIndex="3" />
-                           </children>
-                           <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                           </columnConstraints>
-                           <rowConstraints>
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                           </rowConstraints>
-                        </GridPane>
-                        <ToolBar layoutX="558.0" layoutY="456.0" prefHeight="40.0" prefWidth="208.0">
-                          <items>
-                            <Button mnemonicParsing="false" text="Ajouter" />
-                              <Button mnemonicParsing="false" text="Modifier" />
-                              <Button mnemonicParsing="false" text="Supprimer" />
-                          </items>
-                           <effect>
-                              <DropShadow color="#a1a1a1" />
-                           </effect>
-                        </ToolBar>
-                        <TableView layoutX="311.0" layoutY="64.0" prefHeight="366.0" prefWidth="475.0">
-                          <columns>
-                              <TableColumn prefWidth="75.0" text="Date" />
-                            <TableColumn prefWidth="75.0" text="Num patient" />
-                            <TableColumn prefWidth="75.0" text="Prénom" />
-                              <TableColumn prefWidth="75.0" text="Nom" />
-                              <TableColumn prefWidth="75.0" text="Num docteur" />
-                              <TableColumn prefWidth="75.0" text="Docteur" />
-                          </columns>
-                           <columnResizePolicy>
-                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                           </columnResizePolicy>
-                        </TableView>
-                     </children>
-                  </AnchorPane>
-              </content>
-            </Tab>
             <Tab text="Statistiques">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
