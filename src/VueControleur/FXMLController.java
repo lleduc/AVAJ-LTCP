@@ -7,6 +7,7 @@ package VueControleur;
 
 import ConnexionBase.Connexion;
 import Hopital.*;
+import Hopital.Malade;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
@@ -270,7 +271,7 @@ public class FXMLController extends Main implements Initializable {
         initCBCodeService(codeService);
         initCBdonneesDiag();
 
-        listePatients();
+        listePatientsInit();
         if (identifiant.getText().length() > 0) {
             requete = "SELECT code FROM employe WHERE no_employe LIKE '" + identifiant.getText() + "'";
             try {
@@ -278,35 +279,35 @@ public class FXMLController extends Main implements Initializable {
             } catch (SQLException ex) {
                 Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            if(!liste.isEmpty()){
-            code = (liste.get(0).substring(0, liste.get(0).length() - 1));
-            System.out.println(code);
+            if (!liste.isEmpty()) {
+                code = (liste.get(0).substring(0, liste.get(0).length() - 1));
+                System.out.println(code);
 
-            if (MDP.getText().equalsIgnoreCase(code)) {
+                if (MDP.getText().equalsIgnoreCase(code)) {
 
-                ///////////////////////////////////////////////////////
-                for (int i = 1; i <= 4; i++) {
-                    tabPane.getTabs().get(i).getContent().setDisable(false);
+                    ///////////////////////////////////////////////////////
+                    for (int i = 1; i <= 4; i++) {
+                        tabPane.getTabs().get(i).getContent().setDisable(false);
+                    }
+                    tabPane.getTabs().get(0).getContent().setDisable(true);
+                    tabPane.getSelectionModel().select(1);
+                    //////////////////////////////////////////////////////
+                    champconnect.setText("Accès autorisé");
+                } else {
+                    champconnect.setText("Mot de passe et/ou Identifiant erroné(s)");
+                    identifiant.setText("");
+                    MDP.setText("");
                 }
-                tabPane.getTabs().get(0).getContent().setDisable(true);
-                tabPane.getSelectionModel().select(1);
-                //////////////////////////////////////////////////////
-                champconnect.setText("Accès autorisé");
             } else {
                 champconnect.setText("Mot de passe et/ou Identifiant erroné(s)");
                 identifiant.setText("");
                 MDP.setText("");
             }
-            }else {
-                champconnect.setText("Mot de passe et/ou Identifiant erroné(s)");
-                identifiant.setText("");
-                MDP.setText("");
-            }
-        }else {
-                champconnect.setText("Mot de passe et/ou Identifiant erroné(s)");
-                identifiant.setText("");
-                MDP.setText("");
-            }
+        } else {
+            champconnect.setText("Mot de passe et/ou Identifiant erroné(s)");
+            identifiant.setText("");
+            MDP.setText("");
+        }
 
     }
 
@@ -415,7 +416,7 @@ public class FXMLController extends Main implements Initializable {
             try {
 
                 requete = "SELECT DISTINCT m.nom\n"
-                        + "FROM malade m, docteur d, soigne s, employe e\n"
+                        + "FROM malade m, soigne s, employe e\n"
                         + "WHERE e.nom LIKE '" + medecin.getValue().substring(0, medecin.getValue().length() - 1) + "' AND e.no_employe = s.no_docteur AND s.no_malade = m.no_malade\n"
                         + "ORDER BY nom\n";
                 liste = maconnexion.remplirChampsRequete(requete);
@@ -427,6 +428,36 @@ public class FXMLController extends Main implements Initializable {
             } catch (SQLException ex) {
                 Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
+            //////////////////////////////////////////////////////////////////////////////
+            int nbMalade = 0;
+        ArrayList<String> liste2 = null;
+        ArrayList<String> liste3 = null;
+
+        try {
+            requete = "SELECT COUNT(DISTINCT malade.no_malade) FROM malade malade, soigne soigne, employe employe WHERE employe.nom LIKE '" + medecin.getValue().substring(0, medecin.getValue().length() - 1) + "' AND employe.no_employe = soigne.no_docteur AND soigne.no_malade = malade.no_malade";
+            liste = maconnexion.remplirChampsRequete(requete);
+            nbMalade = Integer.parseInt(liste.get(0).substring(0, liste.get(0).length() - 1));
+            System.out.println(nbMalade);
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            requete = "SELECT malade.no_malade, malade.nom FROM malade malade, soigne soigne, employe employe WHERE employe.nom LIKE '" + medecin.getValue().substring(0, medecin.getValue().length() - 1) + "' AND employe.no_employe = soigne.no_docteur AND soigne.no_malade = malade.no_malade";
+            liste = maconnexion.remplirChampsRequete(requete);
+            //numMalade = Integer.parseInt(liste.get(0).substring(0, liste.get(0).length()-1));
+            requete = "SELECT malade.prenom FROM malade malade , soigne soigne, employe employe WHERE employe.nom LIKE '" + medecin.getValue().substring(0, medecin.getValue().length() - 1) + "' AND employe.no_employe = soigne.no_docteur AND soigne.no_malade = malade.no_malade";
+            liste2 = maconnexion.remplirChampsRequete(requete);
+            requete = "SELECT malade.nom FROM malade malade, soigne soigne, employe employe WHERE employe.nom LIKE '" + medecin.getValue().substring(0, medecin.getValue().length() - 1) + "' AND employe.no_employe = soigne.no_docteur AND soigne.no_malade = malade.no_malade";
+            liste3 = maconnexion.remplirChampsRequete(requete);
+            //System.out.println(nbMalade);    
+        } catch (SQLException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        listePatients(nbMalade, liste2, liste3);
+            
+            ////////////////////////////////////////////////////////////////////////////////////
         });
     }
 
@@ -586,15 +617,13 @@ public class FXMLController extends Main implements Initializable {
      }*/
     ////////////////////////////////////////////////////////////////////////////////////////
     // Rempli l'onglet liste patients avec les informations provenant de la barre
-    public void listePatients() {
-        int numMalade = 0;
-        String prenom, nom;
+    public void listePatientsInit() {
+
+        
         int nbMalade = 0;
         ArrayList<String> liste2 = null;
         ArrayList<String> liste3 = null;
-        int pos = 0;
 
-        ///////////////////////////////////////////////////////
         try {
             requete = "SELECT COUNT(DISTINCT no_malade) FROM malade";
             liste = maconnexion.remplirChampsRequete(requete);
@@ -616,6 +645,17 @@ public class FXMLController extends Main implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        listePatients(nbMalade, liste2, liste3);
+    }
+
+    public void listePatients(int nbMalade, ArrayList<String> liste2, ArrayList<String> liste3) {
+
+        String prenom, nom;
+        int numMalade = 0;
+
+        int pos = 0;
+        PatientData  = FXCollections.observableArrayList();
+        ///////////////////////////////////////////////////////
         for (int i = 0; i < nbMalade; i++) {
 
             for (int j = 0; j < 4; j++) {
@@ -933,7 +973,7 @@ public class FXMLController extends Main implements Initializable {
         mise_a_zero();
         tabPane.getTabs().get(5).getContent().setDisable(true); //Si on valide, on interdit l'accès à l'onglet directement
         tabPane.getSelectionModel().select(2);
-        listePatients();
+        listePatientsInit();
     }
 
     public void Annuler(ActionEvent event) {
@@ -1151,7 +1191,7 @@ public class FXMLController extends Main implements Initializable {
         System.out.println(requete);
         insertion(requete);
 
-        listePatients();
+        listePatientsInit();
     }
 
     @FXML
