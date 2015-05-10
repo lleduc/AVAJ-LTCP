@@ -22,7 +22,9 @@
                         <Label layoutX="370.0" layoutY="259.0" text="Identifiant :" />
                         <Label layoutX="361.0" layoutY="315.0" text="Mot de passe :" />
                         <TextField fx:id="identifiant" layoutX="326.0" layoutY="276.0" />
-                        <TextField fx:id="MDP" layoutX="326.0" layoutY="332.0" />
+                        <TextField layoutX="554.0" layoutY="219.0" />
+                        <Label fx:id="champconnect" layoutX="288.0" layoutY="430.0" prefHeight="17.0" prefWidth="225.0" />
+                        <PasswordField fx:id="MDP" layoutX="326.0" layoutY="332.0" />
                      </children>
                   </AnchorPane>
               </content>
@@ -136,7 +138,7 @@
                         </GridPane>
                         <GridPane fx:id="gridMedecin" layoutX="35.0" layoutY="187.0" prefHeight="30.0" prefWidth="270.0">
                            <children>
-                              <ComboBox fx:id="specialite" prefWidth="150.0" GridPane.columnIndex="1" />
+                              <ComboBox fx:id="specialite" onAction="#actionCBSpecialite" prefWidth="150.0" GridPane.columnIndex="1" />
                               <Label text="Spécialité :" />
                            </children>
                            <columnConstraints>
@@ -163,7 +165,7 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                         </GridPane>
-                        <ToolBar layoutX="539.0" layoutY="470.0" prefHeight="40.0" prefWidth="208.0">
+                        <ToolBar layoutX="435.0" layoutY="477.0" prefHeight="40.0" prefWidth="332.0">
                            <effect>
                               <DropShadow color="#a1a1a1" />
                            </effect>
@@ -171,6 +173,7 @@
                               <Button mnemonicParsing="false" onAction="#Ajouter" text="Ajouter" />
                               <Button mnemonicParsing="false" onAction="#Modifier" text="Modifier" />
                               <Button mnemonicParsing="false" onAction="#Supprimer" text="Supprimer" />
+                              <Button mnemonicParsing="false" onAction="#mise_a_zero" text="Nouvelle recherche" />
                            </items>
                         </ToolBar>
                         <TextArea fx:id="resultat" layoutX="455.0" layoutY="56.0" prefHeight="404.0" prefWidth="292.0" />
@@ -238,7 +241,7 @@
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <BarChart layoutX="52.0" layoutY="86.0">
+                        <BarChart fx:id="graph" layoutX="52.0" layoutY="86.0">
                           <xAxis>
                             <CategoryAxis side="BOTTOM" />
                           </xAxis>
@@ -246,7 +249,7 @@
                             <NumberAxis side="LEFT" />
                           </yAxis>
                         </BarChart>
-                        <ComboBox fx:id="donneesDiag" layoutX="52.0" layoutY="35.0" prefHeight="25.0" prefWidth="175.0" promptText="Select données à afficher" />
+                        <ComboBox fx:id="donneesDiag" layoutX="52.0" layoutY="35.0" onMouseReleased="#actionCBdonneesDiag" prefHeight="25.0" prefWidth="376.0" promptText="Select données à afficher" />
                      </children>
                   </AnchorPane>
                </content>
