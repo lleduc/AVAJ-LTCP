@@ -22,7 +22,6 @@
                         <Label layoutX="370.0" layoutY="259.0" text="Identifiant :" />
                         <Label layoutX="361.0" layoutY="315.0" text="Mot de passe :" />
                         <TextField fx:id="identifiant" layoutX="326.0" layoutY="276.0" />
-                        <TextField layoutX="554.0" layoutY="219.0" />
                         <Label fx:id="champconnect" layoutX="288.0" layoutY="430.0" prefHeight="17.0" prefWidth="225.0" />
                         <PasswordField fx:id="MDP" layoutX="326.0" layoutY="332.0" />
                      </children>
