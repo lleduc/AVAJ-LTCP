@@ -281,7 +281,7 @@ public class FXMLController extends Main implements Initializable {
             }
             if (!liste.isEmpty()) {
                 code = (liste.get(0).substring(0, liste.get(0).length() - 1));
-                System.out.println(code);
+               // System.out.println(code);
 
                 if (MDP.getText().equalsIgnoreCase(code)) {
 
@@ -764,6 +764,7 @@ public class FXMLController extends Main implements Initializable {
         int b = 0;
         String codemutuelle;
 
+        numero1.setEditable(false);
         tabPane.getTabs().get(5).getContent().setDisable(false);
         tabPane.getSelectionModel().select(5);
         actionCBType(type1, gridCommune1, gridMedecin1, gridMalade1, gridInfirmier1, dateEntree1, dateSortie1);
@@ -936,7 +937,8 @@ public class FXMLController extends Main implements Initializable {
         }
         //lorsque l'on veut modifier une ligne de la BDD
         if (ajout_modif == false) {
-
+            
+            
             requete = " UPDATE " + typeRequete + " SET no_" + typeRequete + " = '" + lala + "' , nom = '" + nom1.getText() + "' ,prenom = '" + prenom1.getText() + "' ,adresse = '" + adresse1.getText() + "' ,tel = '" + telephone1.getText() + "'  WHERE no_" + typeRequete + " =" + lala;
             System.out.println(requete);
             insertion(requete);
@@ -1108,6 +1110,7 @@ public class FXMLController extends Main implements Initializable {
         ajout_modif = false;
         int j = 0;
         char a;
+        numero1.setEditable(false);
         String typeSelect = type.getValue();
         for (int i = 0; i < 4; i++) {
             System.out.println(i);
@@ -1191,6 +1194,22 @@ public class FXMLController extends Main implements Initializable {
         requete = "DELETE FROM `" + typeRequete + "` WHERE `no_" + typeRequete + "`=" + lala;
         System.out.println(requete);
         insertion(requete);
+        
+        if (typeSelect.equalsIgnoreCase("docteur")) {
+            requete = "DELETE FROM `docteur` WHERE `no_docteur`=" + lala;
+        System.out.println(requete);
+        insertion(requete);
+        }
+        if (typeSelect.equalsIgnoreCase("infirmier")) {
+            requete = "DELETE FROM `infirmier` WHERE `no_infirmier`=" + lala;
+        System.out.println(requete);
+        insertion(requete);
+        }
+        if (typeSelect.equalsIgnoreCase("malade")) {
+            requete = "DELETE FROM `hospitalisation` WHERE `no_malade`=" + lala;
+        System.out.println(requete);
+        insertion(requete);
+        }
 
         listePatientsInit();
     }
