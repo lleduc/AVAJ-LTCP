@@ -310,6 +310,7 @@ public class FXMLController extends Main implements Initializable {
         }
 
     }
+    
 
     // Initialisation des combobox
     public void initCBMedecin() {
@@ -1399,6 +1400,8 @@ public class FXMLController extends Main implements Initializable {
         try {
             maconnexion = new Connexion(dechiffreur("72656E79"), dechiffreur("4C5A6F613235373424"),
                     dechiffreur("72656E792D7277"), dechiffreur("486A4237564B3952"));
+            //maconnexion= new Connexion("avaj","root","root");
+                    //System.out.println("connexion offline ok");
         } catch (SQLException ex) {
             Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {

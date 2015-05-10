@@ -61,6 +61,21 @@ public class Connexion {
         }
     }
     
+    public Connexion(String url, String login, String password) throws SQLException, ClassNotFoundException {
+        // chargement driver "com.mysql.jdbc.Driver"
+        Class.forName("com.mysql.jdbc.Driver");
+
+        // url de connexion "jdbc:mysql://localhost/avaj"
+        String urlDatabase = "jdbc:mysql://localhost/" + url;
+
+        //création d'une connexion JDBC à la base
+        conn = DriverManager.getConnection(urlDatabase, login, password);
+
+        // création d'un ordre SQL (statement)
+        stmt = conn.createStatement();
+
+    }
+    
 
     /**
      * Methode qui retourne l'ArrayList des champs de la requete en parametre
