@@ -617,6 +617,7 @@ public class FXMLController extends Main implements Initializable {
      }*/
     ////////////////////////////////////////////////////////////////////////////////////////
     // Rempli l'onglet liste patients avec les informations provenant de la barre
+   @FXML
     public void listePatientsInit() {
 
         
