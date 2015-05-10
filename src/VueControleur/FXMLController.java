@@ -35,6 +35,7 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.Chart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -60,6 +61,8 @@ public class FXMLController extends Main implements Initializable {
 
     //Variables de la fenêtre de recherche
     @FXML
+    public CheckBox p;
+    
     public Stage popup;
     @FXML
     public Label messagePopup;
@@ -75,8 +78,7 @@ public class FXMLController extends Main implements Initializable {
     private TextField nom;
     @FXML
     private TextField prenom;
-    @FXML
-    private TextArea resultat;
+    
 
     ObservableList<String> listeCBMedecin, listeCBType;
     ArrayList<String> liste = null;
@@ -105,6 +107,8 @@ public class FXMLController extends Main implements Initializable {
     private DatePicker dateEntree;
     @FXML
     private DatePicker dateSortie;
+    @FXML
+    private TextArea resultat;
 
     @FXML
     private GridPane gridMalade;
@@ -1400,8 +1404,16 @@ public class FXMLController extends Main implements Initializable {
         try {
             maconnexion = new Connexion(dechiffreur("72656E79"), dechiffreur("4C5A6F613235373424"),
                     dechiffreur("72656E792D7277"), dechiffreur("486A4237564B3952"));
-            //maconnexion= new Connexion("avaj","root","root");
-                    //System.out.println("connexion offline ok");
+            if (maconnexion.getEstConnecte() == false) {
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                System.out.println("bonjour");
+            maconnexion= new Connexion("avaj","root","root");
+                    System.out.println("connexion offline ok");
+            }
         } catch (SQLException ex) {
             Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {

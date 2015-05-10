@@ -26,6 +26,8 @@ public class Connexion {
     private Statement stmt;
     private ResultSet rset;
     private ResultSetMetaData rsetMeta;
+    private SSHTunnel ssh;
+    private Boolean estConnecte = false;
     /**
      * ArrayList public pour les requêtes de sélection
      */
@@ -43,11 +45,11 @@ public class Connexion {
         Class.forName("com.mysql.jdbc.Driver");
 
         // Connexion via le tunnel SSH avec le username et le password ECE
-        SSHTunnel ssh = new SSHTunnel(usernameECE, passwordECE);
+        ssh = new SSHTunnel(usernameECE, passwordECE);
 
         if (ssh.connect()) {
             System.out.println("Connexion reussie");
-
+            estConnecte = true;
             // url de connexion "jdbc:mysql://localhost:3305/usernameECE"
             String urlDatabase = "jdbc:mysql://localhost:3305/" + usernameECE;
 
@@ -138,6 +140,14 @@ public class Connexion {
 
     public ArrayList<String> getRequetesMaj() {
         return requetesMaj;
+    }
+
+    public SSHTunnel getSsh() {
+        return ssh;
+    }
+
+    public Boolean getEstConnecte() {
+        return estConnecte;
     }
     
 }
