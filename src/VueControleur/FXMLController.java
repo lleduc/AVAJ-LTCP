@@ -726,19 +726,19 @@ public class FXMLController extends Main implements Initializable {
         Malade mal = patients.getSelectionModel().selectedItemProperty().get();
         num = mal.getNum();
         try {
-            requete = (maconnexion.remplirChampsRequete("SELECT code_service FROM hospitalisation WHERE " + num + " = no_malade")).toString();
+            requete = (maconnexion.remplirChampsRequete("SELECT DISTINCT code_service FROM hospitalisation WHERE " + num + " = no_malade")).toString();
             requete = requete.substring(1, requete.length() - 1);
             servicep.setText(requete);
-            requete = (maconnexion.remplirChampsRequete("SELECT employe.nom FROM soigne soigne, employe employe WHERE " + num + " = soigne.no_malade AND employe.no_employe = soigne.no_docteur")).toString();
+            requete = (maconnexion.remplirChampsRequete("SELECT DISTINCT employe.nom FROM soigne soigne, employe employe WHERE " + num + " = soigne.no_malade AND employe.no_employe = soigne.no_docteur")).toString();
             requete = requete.substring(1, requete.length() - 1);
             medecinp.setText(requete);
-            requete = (maconnexion.remplirChampsRequete("SELECT adresse FROM malade WHERE " + num + " = no_malade")).toString();
+            requete = (maconnexion.remplirChampsRequete("SELECT DISTINCT adresse FROM malade WHERE " + num + " = no_malade")).toString();
             requete = requete.substring(1, requete.length() - 1);
             adressep.setText(requete);
-            requete = (maconnexion.remplirChampsRequete("SELECT tel FROM malade WHERE " + num + " = no_malade")).toString();
+            requete = (maconnexion.remplirChampsRequete("SELECT DISTINCT tel FROM malade WHERE " + num + " = no_malade")).toString();
             requete = requete.substring(1, requete.length() - 1);
             telephonep.setText(requete);
-            requete = (maconnexion.remplirChampsRequete("SELECT mutuelle FROM malade WHERE " + num + " = no_malade")).toString();
+            requete = (maconnexion.remplirChampsRequete("SELECT DISTINCT mutuelle FROM malade WHERE " + num + " = no_malade")).toString();
             requete = requete.substring(1, requete.length() - 1);
             mutuellep.setText(requete);
         } catch (SQLException ex) {
@@ -819,7 +819,7 @@ public class FXMLController extends Main implements Initializable {
                 a = b;
             }
         }
-        //////////////////////////////////////////////////
+        
         requete = "SELECT malade.no_malade FROM malade malade";
         try {
             liste = maconnexion.remplirChampsRequete(requete);
@@ -835,7 +835,7 @@ public class FXMLController extends Main implements Initializable {
             }
         }
 
-        ///////////////////////////////////////////////////
+        
         a = a + 1;
         numero1.setText(Integer.toString(a));
 
@@ -1030,14 +1030,14 @@ public class FXMLController extends Main implements Initializable {
         numero1.setEditable(false);
         String typeSelect = type.getValue();
         for (int i = 0; i < 4; i++) {
-            System.out.println(i);
+            
             a = personneTemporaire.charAt(i);
             if (a == ',') {
                 j = i;
             }
         }
         lala = personneTemporaire.substring(0, j);
-        System.out.println(lala);
+        //System.out.println(lala);
         tabPane.getTabs().get(4).getContent().setDisable(false);
         tabPane.getSelectionModel().select(4);
         actionCBType(type1, gridCommune1, gridMedecin1, gridMalade1, gridInfirmier1, dateEntree1, dateSortie1);
