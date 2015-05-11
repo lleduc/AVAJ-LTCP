@@ -60,9 +60,6 @@ import javafx.util.StringConverter;
 public class FXMLController extends Main implements Initializable {
 
     //Variables de la fenêtre de recherche
-    @FXML
-    public CheckBox p;
-    
     public Stage popup;
     @FXML
     public Label messagePopup;
@@ -78,23 +75,20 @@ public class FXMLController extends Main implements Initializable {
     private TextField nom;
     @FXML
     private TextField prenom;
-    
 
     ObservableList<String> listeCBMedecin, listeCBType;
     ArrayList<String> liste = null;
     public String requete, typeRequete;
+
     //Variable d'ajout/modification
     public boolean ajout_modif = true;
     public String personneTemporaire; //numéro personne utilisé pour l'ajout et la modification
     public String lala;
-/////////////////////////////////////////////////////////////////////
-    //String nomTF = null;
-    //Employe  employe= new Employe();
+
     Malade malade = new Malade();
     Docteur docteur = new Docteur();
     Infirmier infirmier = new Infirmier();
     Hospitalisation hospitalisation = new Hospitalisation();
-    ///////////////////////////////////////////////////////////////////////
 
     //Variables de malade dans recherche
     @FXML
@@ -131,7 +125,7 @@ public class FXMLController extends Main implements Initializable {
     private GridPane gridInfirmier;
 
     //Variables de la fenêtre Liste patients
-///////////////////////////////////////////////////////////
+
     @FXML
     private TableView<Malade> patients;
     @FXML
@@ -153,7 +147,7 @@ public class FXMLController extends Main implements Initializable {
     private TextField telephonep;
     @FXML
     private TextField mutuellep;
-    //////////////////////////////////////////////////////
+
     //Variables de la fenêtre de connection
     @FXML
     private TextField identifiant;
@@ -234,34 +228,11 @@ public class FXMLController extends Main implements Initializable {
     private ComboBox<String> donneesDiag;
     ObservableList<String> listeCBdonneesDiag;
 
-    //initialisationd la visibilité graphique
-    // Sous programmes répondant aux actions sur l'interface graphique
-    @FXML
-    public void SearchBouton(ActionEvent event) {
-
-        System.out.println("Rechercher");
-        String result = searchBar.getText();
-        System.out.println(result);
-
-        try {
-
-            // recuperer la liste des lignes de la requete selectionnee
-            result = "SELECT nom, prenom FROM employe  WHERE nom LIKE '" + result + "%'";
-            liste = maconnexion.remplirChampsRequete(result);
-
-            // afficher les lignes de la requete selectionnee a partir de la liste
-            for (int i = 0; i < liste.size(); i++) {
-                System.out.println(liste.get(i));
-            }
-        } catch (SQLException e) {
-            System.out.println("Echec SQL");
-            e.printStackTrace();
-        }
-    }
-
-    // Création de la connection à la base de donnée 
-    // lors de l'appuie sur le bouton connection si
-    // les identifiants et mots de passe sont valides
+    /**
+     * Création de la connection à la base de donnée lors de l'appuie sur le
+     * bouton connection si les identifiants et mots de passe sont valides.
+     * Initialisation des Combobox.
+     */
     public void initConnection() {
 
         String code;
@@ -285,17 +256,13 @@ public class FXMLController extends Main implements Initializable {
             }
             if (!liste.isEmpty()) {
                 code = (liste.get(0).substring(0, liste.get(0).length() - 1));
-               // System.out.println(code);
 
                 if (MDP.getText().equalsIgnoreCase(code)) {
-
-                    ///////////////////////////////////////////////////////
                     for (int i = 1; i <= 3; i++) {
                         tabPane.getTabs().get(i).getContent().setDisable(false);
                     }
                     tabPane.getTabs().get(0).getContent().setDisable(true);
                     tabPane.getSelectionModel().select(1);
-                    //////////////////////////////////////////////////////
                     champconnect.setText("Accès autorisé");
                 } else {
                     champconnect.setText("Mot de passe et/ou Identifiant erroné(s)");
@@ -314,9 +281,10 @@ public class FXMLController extends Main implements Initializable {
         }
 
     }
-    
 
-    // Initialisation des combobox
+    /**
+     * Initialisation de la ComboBox medecin.
+     */
     public void initCBMedecin() {
 
         try {
@@ -334,15 +302,21 @@ public class FXMLController extends Main implements Initializable {
 
     }
 
+    /**
+     * Initialisation de la ComboBox type(medecin, infirmier ou malade).
+     */
     public void initCBType(ComboBox<String> type, String types) {
         listeCBType = FXCollections.observableArrayList("docteur", "infirmier", "malade");
         type.setItems(listeCBType);
-        ///////////////////////////////
-        //ajout thomas
+
         type.setValue(types);
-        /////////////////////////////////
+
     }
 
+    /**
+     * Initialisation de la ComboBox mutuelle. Elle est remplie avec une requete
+     * qui recherche toutes les mutuelles présentes dans la base de données.
+     */
     public void initCBMutuelle(ComboBox<String> mutuelle) {
         try {
             requete = "SELECT DISTINCT mutuelle\n"
@@ -356,6 +330,11 @@ public class FXMLController extends Main implements Initializable {
         }
     }
 
+    /**
+     * Initialisation de la ComboBox numéro de chambre. Elle est remplie avec
+     * une requete qui recherche tous les numéros de chambres présents dans la
+     * base de données.
+     */
     public void initCBNumeroChambre(ComboBox<String> numeroChambre) {
         try {
             requete = "SELECT DISTINCT no_chambre\n"
@@ -369,6 +348,11 @@ public class FXMLController extends Main implements Initializable {
         }
     }
 
+    /**
+     * Initialisation de la ComboBox spécialité. Elle est remplie avec une
+     * requete qui recherche toutes les spécialités présentes dans la base de
+     * données.
+     */
     public void initCBSpecialite(ComboBox<String> specialite) {
         try {
             requete = "SELECT DISTINCT specialite\n"
@@ -382,6 +366,10 @@ public class FXMLController extends Main implements Initializable {
         }
     }
 
+    /**
+     * Initialisation de la ComboBox code service. Elle est remplie avec une
+     * requete qui recherche tous les services présents dans la base de données.
+     */
     public void initCBCodeService(ComboBox<String> codeService) {
         try {
             requete = "SELECT DISTINCT code\n"
@@ -395,6 +383,10 @@ public class FXMLController extends Main implements Initializable {
         }
     }
 
+    /**
+     * Initialisation de la ComboBox Rotation. Elle est remplie avec une requete
+     * qui recherche toutes les rotations présentes dans la base de données.
+     */
     public void initCBRotation(ComboBox<String> rotation) {
         try {
             requete = "SELECT DISTINCT rotation\n"
@@ -408,16 +400,21 @@ public class FXMLController extends Main implements Initializable {
         }
     }
 
+    /**
+     * Initialisation de la ComboBox de données du diagramme.
+     */
     public void initCBdonneesDiag() {
         listeCBdonneesDiag = FXCollections.observableArrayList("Moyenne des salaires infirmiers par rotation", "Moyenne des salaires infirmiers par service", "Patient par service", "nombre de chambre par service");
         donneesDiag.setItems(listeCBdonneesDiag);
     }
 
-    // Action des combobox lorsqu'un choix est selectionné
+    /**
+     * Initialisation de l'action lors d'un évènement sur la ComboBox medecin.
+     * Elle recherche tous les patients du médecin selectionné.
+     */
     public void actionCBMedecin() {
         medecin.setOnAction((event) -> {
             requete = medecin.getValue();
-            //System.out.println("ComboBox Action (selected: " + medecin.getValue().substring(0, medecin.getValue().length()-1)+")");
             try {
 
                 requete = "SELECT DISTINCT m.nom\n"
@@ -433,39 +430,40 @@ public class FXMLController extends Main implements Initializable {
             } catch (SQLException ex) {
                 Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-            //////////////////////////////////////////////////////////////////////////////
+
             int nbMalade = 0;
-        ArrayList<String> liste2 = null;
-        ArrayList<String> liste3 = null;
+            ArrayList<String> liste2 = null;
+            ArrayList<String> liste3 = null;
 
-        try {
-            requete = "SELECT COUNT(DISTINCT malade.no_malade) FROM malade malade, soigne soigne, employe employe WHERE employe.nom LIKE '" + medecin.getValue().substring(0, medecin.getValue().length() - 1) + "' AND employe.no_employe = soigne.no_docteur AND soigne.no_malade = malade.no_malade";
-            liste = maconnexion.remplirChampsRequete(requete);
-            nbMalade = Integer.parseInt(liste.get(0).substring(0, liste.get(0).length() - 1));
-            System.out.println(nbMalade);
-        } catch (SQLException ex) {
-            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            try {
+                requete = "SELECT COUNT(DISTINCT malade.no_malade) FROM malade malade, soigne soigne, employe employe WHERE employe.nom LIKE '" + medecin.getValue().substring(0, medecin.getValue().length() - 1) + "' AND employe.no_employe = soigne.no_docteur AND soigne.no_malade = malade.no_malade";
+                liste = maconnexion.remplirChampsRequete(requete);
+                nbMalade = Integer.parseInt(liste.get(0).substring(0, liste.get(0).length() - 1));
+                System.out.println(nbMalade);
+            } catch (SQLException ex) {
+                Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-        try {
-            requete = "SELECT malade.no_malade, malade.nom FROM malade malade, soigne soigne, employe employe WHERE employe.nom LIKE '" + medecin.getValue().substring(0, medecin.getValue().length() - 1) + "' AND employe.no_employe = soigne.no_docteur AND soigne.no_malade = malade.no_malade";
-            liste = maconnexion.remplirChampsRequete(requete);
-            //numMalade = Integer.parseInt(liste.get(0).substring(0, liste.get(0).length()-1));
-            requete = "SELECT malade.prenom FROM malade malade , soigne soigne, employe employe WHERE employe.nom LIKE '" + medecin.getValue().substring(0, medecin.getValue().length() - 1) + "' AND employe.no_employe = soigne.no_docteur AND soigne.no_malade = malade.no_malade";
-            liste2 = maconnexion.remplirChampsRequete(requete);
-            requete = "SELECT malade.nom FROM malade malade, soigne soigne, employe employe WHERE employe.nom LIKE '" + medecin.getValue().substring(0, medecin.getValue().length() - 1) + "' AND employe.no_employe = soigne.no_docteur AND soigne.no_malade = malade.no_malade";
-            liste3 = maconnexion.remplirChampsRequete(requete);
-            //System.out.println(nbMalade);    
-        } catch (SQLException ex) {
-            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        listePatients(nbMalade, liste2, liste3);
-            
-            ////////////////////////////////////////////////////////////////////////////////////
+            try {
+                requete = "SELECT malade.no_malade, malade.nom FROM malade malade, soigne soigne, employe employe WHERE employe.nom LIKE '" + medecin.getValue().substring(0, medecin.getValue().length() - 1) + "' AND employe.no_employe = soigne.no_docteur AND soigne.no_malade = malade.no_malade";
+                liste = maconnexion.remplirChampsRequete(requete);
+                requete = "SELECT malade.prenom FROM malade malade , soigne soigne, employe employe WHERE employe.nom LIKE '" + medecin.getValue().substring(0, medecin.getValue().length() - 1) + "' AND employe.no_employe = soigne.no_docteur AND soigne.no_malade = malade.no_malade";
+                liste2 = maconnexion.remplirChampsRequete(requete);
+                requete = "SELECT malade.nom FROM malade malade, soigne soigne, employe employe WHERE employe.nom LIKE '" + medecin.getValue().substring(0, medecin.getValue().length() - 1) + "' AND employe.no_employe = soigne.no_docteur AND soigne.no_malade = malade.no_malade";
+                liste3 = maconnexion.remplirChampsRequete(requete);    
+            } catch (SQLException ex) {
+                Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            listePatients(nbMalade, liste2, liste3);
+
         });
     }
 
+    /**
+     * Initialisation de l'action lors d'un évènement sur la ComboBox
+     * spécialité. Elle envoie une requête avec comme critère la spécialité
+     * selectionnée.
+     */
     public void actionCBSpecialite() {
         specialite.setOnAction((event) -> {
             if (!specialite.getValue().equalsIgnoreCase("")) {
@@ -475,6 +473,10 @@ public class FXMLController extends Main implements Initializable {
         });
     }
 
+    /**
+     * Initialisation de l'action lors d'un évènement sur la ComboBox service.
+     * Elle envoie une requête avec comme critère le service selectionné.
+     */
     public void actionCBService() {
         codeService.setOnAction((event) -> {
             if (!codeService.getValue().equalsIgnoreCase("")) {
@@ -484,6 +486,10 @@ public class FXMLController extends Main implements Initializable {
         });
     }
 
+    /**
+     * Initialisation de l'action lors d'un évènement sur la ComboBox rotation.
+     * Elle envoie une requête avec comme critère la rotation selectionnée.
+     */
     public void actionCBRotation() {
         rotation.setOnAction((event) -> {
             if (!rotation.getValue().equalsIgnoreCase("")) {
@@ -493,6 +499,10 @@ public class FXMLController extends Main implements Initializable {
         });
     }
 
+    /**
+     * Initialisation de l'action lors d'un évènement sur la ComboBox mutuelle.
+     * Elle envoie une requête avec comme critère la mutuelle selectionnée.
+     */
     public void actionCBMutuelle() {
         mutuelle.setOnAction((event) -> {
             if (!mutuelle.getValue().equalsIgnoreCase("")) {
@@ -502,6 +512,11 @@ public class FXMLController extends Main implements Initializable {
         });
     }
 
+    /**
+     * Initialisation de l'action lors d'un évènement sur la ComboBox chambre.
+     * Elle envoie une requête avec comme critère le numéro de chambre
+     * selectionné.
+     */
     public void actionCBChambre() {
         numeroChambre.setOnAction((event) -> {
             if (!numeroChambre.getValue().equalsIgnoreCase("")) {
@@ -511,6 +526,19 @@ public class FXMLController extends Main implements Initializable {
         });
     }
 
+    /**
+     * Initialisation de l'action lors d'un évènement sur la ComboBox type. Elle
+     * modifie l'affichage en fonction du type de personne selectionnée dans la
+     * Combobox.
+     *
+     * @param type
+     * @param gridCommune
+     * @param gridMedecin
+     * @param gridMalade
+     * @param gridInfirmier
+     * @param dateEntree
+     * @param dateSortie
+     */
     public void actionCBType(ComboBox<String> type, GridPane gridCommune, GridPane gridMedecin, GridPane gridMalade, GridPane gridInfirmier, DatePicker dateEntree, DatePicker dateSortie) {
 
         type.setOnAction((event) -> {
@@ -546,6 +574,11 @@ public class FXMLController extends Main implements Initializable {
 
     }
 
+    /**
+     * Initialisation de l'action lors d'un évènement sur la ComboBox
+     * donneesDiag. Elle affiche les diagrammes de reporting en fonction du
+     * choix de la Combobox.
+     */
     public void actionCBdonneesDiag() {
         donneesDiag.setOnAction((event) -> {
             if (donneesDiag.getValue().equalsIgnoreCase("Moyenne des salaires infirmiers par rotation")) {
@@ -567,19 +600,23 @@ public class FXMLController extends Main implements Initializable {
         });
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * Initialisation de l'action lors d'un évènement sur un datepicker. Il
+     * retourne la date selectionné sous forme de string.
+     *
+     * @param date
+     * @param type
+     */
     public void actionDatePicker(DatePicker date, String type) {
         String pattern = "yyyy-MM-dd";
 
         date.setPromptText(pattern.toLowerCase());
-        //System.out.println(date.getClass().getName());
         date.setConverter(new StringConverter<LocalDate>() {
             DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
 
             @Override
             public String toString(LocalDate date) {
                 if (date != null) {
-                    //System.out.println(dateFormatter.format(date));
                     if (type.equalsIgnoreCase("entree")) {
                         hospitalisation.setDateE(dateFormatter.format(date));
                         System.out.println("dateE : " + hospitalisation.getDateE());
@@ -607,12 +644,12 @@ public class FXMLController extends Main implements Initializable {
         });
     }
 
-    
-    // Rempli l'onglet liste patients 
-   @FXML
+    /**
+     * Méthode récupérant tous les patients dans la base de données.
+     */
+    @FXML
     public void listePatientsInit() {
 
-        
         int nbMalade = 0;
         ArrayList<String> liste2 = null;
         ArrayList<String> liste3 = null;
@@ -621,7 +658,7 @@ public class FXMLController extends Main implements Initializable {
             requete = "SELECT COUNT(DISTINCT no_malade) FROM malade";
             liste = maconnexion.remplirChampsRequete(requete);
             nbMalade = Integer.parseInt(liste.get(0).substring(0, liste.get(0).length() - 1));
-            //System.out.println(nbMalade);
+            
         } catch (SQLException ex) {
             Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -629,26 +666,34 @@ public class FXMLController extends Main implements Initializable {
         try {
             requete = "SELECT no_malade, nom FROM malade";
             liste = maconnexion.remplirChampsRequete(requete);
-            //numMalade = Integer.parseInt(liste.get(0).substring(0, liste.get(0).length()-1));
+            
             requete = "SELECT prenom FROM malade";
             liste2 = maconnexion.remplirChampsRequete(requete);
             requete = "SELECT nom FROM malade";
             liste3 = maconnexion.remplirChampsRequete(requete);
-            //System.out.println(nbMalade);    
+                
         } catch (SQLException ex) {
             Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
         listePatients(nbMalade, liste2, liste3);
     }
 
+    /**
+     * Méthode permettant d'afficher tous les patients dans l'onglet liste
+     * patient avec les valeurs récupérer par listePatientInit().
+     *
+     * @param nbMalade
+     * @param liste2
+     * @param liste3
+     */
     public void listePatients(int nbMalade, ArrayList<String> liste2, ArrayList<String> liste3) {
 
         String prenom, nom;
         int numMalade = 0;
 
         int pos = 0;
-        PatientData  = FXCollections.observableArrayList();
-        ///////////////////////////////////////////////////////
+        PatientData = FXCollections.observableArrayList();
+        
         for (int i = 0; i < nbMalade; i++) {
 
             for (int j = 0; j < 4; j++) {
@@ -668,17 +713,19 @@ public class FXMLController extends Main implements Initializable {
         cprenom.setCellValueFactory(cellData -> cellData.getValue().getSurnameProperty());
         cnom.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
         patients.setItems(PatientData);
-        ////////////////////////////////////////////////////////////
+       
     }
 
+    /**
+     * Méthode permettant remplir les champs d'un patient lorsque l'on clique
+     * sur un patient dans liste patient.
+     */
     @FXML
     public void selectPatient() {
         int num = 0;
         Malade mal = patients.getSelectionModel().selectedItemProperty().get();
         num = mal.getNum();
         try {
-            //System.out.println(num);
-            //requete = "SELECT ";
             requete = (maconnexion.remplirChampsRequete("SELECT code_service FROM hospitalisation WHERE " + num + " = no_malade")).toString();
             requete = requete.substring(1, requete.length() - 1);
             servicep.setText(requete);
@@ -699,9 +746,12 @@ public class FXMLController extends Main implements Initializable {
         }
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Sous programmes permettant d'additionner les différents critères de recherche afin de créer une requête
-    
+    /**
+     * Méthode utilisée pour avertir l'utilisateur que sa saisie est érronée.
+     *
+     * @param ressource
+     * @param titre
+     */
     public void popup(String ressource, String titre) {
         try {
             popup = new Stage();
@@ -714,11 +764,6 @@ public class FXMLController extends Main implements Initializable {
             popup.initOwner(primaryStage);
             Scene scene = new Scene(page);
             popup.setScene(scene);
-
-            //PopupsaisienumeroController controleur = loader.getController();
-            //controller.setDialogStage(popup);
-            //controller.setPerson(person);
-            // Show the dialog and wait until the user closes it
             popup.showAndWait();
 
         } catch (IOException e) {
@@ -726,7 +771,11 @@ public class FXMLController extends Main implements Initializable {
         }
     }
 
-   
+    /**
+     * Méthode d'ajout d'une personne à la base de données.
+     *
+     * @param event
+     */
     public void Ajouter(ActionEvent event) {
         ajout_modif = true;
         String str;
@@ -758,9 +807,6 @@ public class FXMLController extends Main implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        /*for (int i = 0; i < liste.size(); i++) {
-         System.out.println(liste.get(i));
-         }*/
 
         str = liste.get(0);
         str = str.substring(0, str.length() - 1);
@@ -768,7 +814,6 @@ public class FXMLController extends Main implements Initializable {
 
         for (int i = 0; i < liste.size(); i++) {
             b = Integer.parseInt(liste.get(i).substring(0, liste.get(i).length() - 1));
-            //System.out.println("VAL" + liste.get(i));
 
             if (b > a) {
                 a = b;
@@ -796,7 +841,13 @@ public class FXMLController extends Main implements Initializable {
 
     }
 
-    
+    /**
+     * Méthode permettant d'envoyer les requêtes d'ajout/modification à la base
+     * de données. En fonction du type d'action à réaliser, Valider n'agit pas
+     * de la même manière.
+     *
+     * @param event
+     */
     public void Valider(ActionEvent event) {
 
         String typeSelect = type1.getValue();
@@ -834,8 +885,7 @@ public class FXMLController extends Main implements Initializable {
         }
         //lorsque l'on veut modifier une ligne de la BDD
         if (ajout_modif == false) {
-            
-            
+
             requete = " UPDATE " + typeRequete + " SET no_" + typeRequete + " = '" + lala + "' , nom = '" + nom1.getText() + "' ,prenom = '" + prenom1.getText() + "' ,adresse = '" + adresse1.getText() + "' ,tel = '" + telephone1.getText() + "'  WHERE no_" + typeRequete + " =" + lala;
             System.out.println(requete);
             insertion(requete);
@@ -876,6 +926,12 @@ public class FXMLController extends Main implements Initializable {
         listePatientsInit();
     }
 
+    /**
+     * Méthode permettant de retourner dans l'onglet de recherche sans envoyer
+     * la requête de modification/ajout.
+     *
+     * @param event
+     */
     public void Annuler(ActionEvent event) {
         tabPane.getTabs().get(4).getContent().setDisable(true); //Si on annule, on interdit l'accès à l'onglet directement
         tabPane.getSelectionModel().select(2);
@@ -883,6 +939,10 @@ public class FXMLController extends Main implements Initializable {
 
     }
 
+    /**
+     * Méthode de remise à zéro des champs de recherche et ComboBox et modification
+     * lorsque l'on change de page.
+     */
     @FXML
     public void mise_a_zero() {
         //Remise à 0 des combobox et textField
@@ -901,9 +961,8 @@ public class FXMLController extends Main implements Initializable {
         salaire1.setText(null);
         dateEntree1.setValue(null);
         dateSortie1.setValue(null);
-        ////////////////////////////////////////////////////
+        
         specialite.setValue("");
-        //type.setValue(null);
         mutuelle.setValue("");
         rotation.setValue("");
         numeroChambre.setValue("");
@@ -923,6 +982,12 @@ public class FXMLController extends Main implements Initializable {
         hospitalisation.setDateS(null);
     }
 
+    /**
+     * Méthode d'envoie des requetes d'ajout, de modification et de suppression
+     * à la base de données.
+     *
+     * @param requete
+     */
     public void insertion(String requete) {
         try {
             maconnexion.getStmt().executeUpdate(requete);
@@ -931,6 +996,12 @@ public class FXMLController extends Main implements Initializable {
         }
     }
 
+    /**
+     * Récupère la première ligne de l'arryliste de requête.
+     *
+     * @param requete
+     * @return
+     */
     public String list_get_zero(String requete) {
         try {
             liste = null;
@@ -947,7 +1018,11 @@ public class FXMLController extends Main implements Initializable {
         }
     }
 
-    
+    /**
+     * Méthode de modification de personne dans la base de données.
+     *
+     * @param event
+     */
     public void Modifier(ActionEvent event) {
         ajout_modif = false;
         int j = 0;
@@ -972,7 +1047,6 @@ public class FXMLController extends Main implements Initializable {
         initCBSpecialite(specialite1);
         initCBRotation(rotation1);
         initCBCodeService(codeService1);
-        
 
         if (typeSelect.equalsIgnoreCase("docteur") || typeSelect.equalsIgnoreCase("infirmier")) {
             typeRequete = "employe";
@@ -1013,6 +1087,11 @@ public class FXMLController extends Main implements Initializable {
 
     }
 
+    /**
+     * Méthode de suppression d'une personne dans la base.
+     *
+     * @param event
+     */
     public void Supprimer(ActionEvent event) {
         String typeSelect = type.getValue();
         int j = 0;
@@ -1036,26 +1115,33 @@ public class FXMLController extends Main implements Initializable {
         requete = "DELETE FROM `" + typeRequete + "` WHERE `no_" + typeRequete + "`=" + lala;
         System.out.println(requete);
         insertion(requete);
-        
+
         if (typeSelect.equalsIgnoreCase("docteur")) {
             requete = "DELETE FROM `docteur` WHERE `no_docteur`=" + lala;
-        System.out.println(requete);
-        insertion(requete);
+            System.out.println(requete);
+            insertion(requete);
         }
         if (typeSelect.equalsIgnoreCase("infirmier")) {
             requete = "DELETE FROM `infirmier` WHERE `no_infirmier`=" + lala;
-        System.out.println(requete);
-        insertion(requete);
+            System.out.println(requete);
+            insertion(requete);
         }
         if (typeSelect.equalsIgnoreCase("malade")) {
             requete = "DELETE FROM `hospitalisation` WHERE `no_malade`=" + lala;
-        System.out.println(requete);
-        insertion(requete);
+            System.out.println(requete);
+            insertion(requete);
         }
 
         listePatientsInit();
     }
 
+    /**
+     * Méthode de récupération d'une saisie clavier pour mettre la valeur dans
+     * la classe correspondante.
+     *
+     * @param type
+     * @param personne
+     */
     @FXML
     public void actionTF(TextField type, Personne personne) {
         if (type.equals(nom)) {
@@ -1071,6 +1157,11 @@ public class FXMLController extends Main implements Initializable {
         requete(personne);
     }
 
+    /**
+     * Méthode appelant actionTF pour un numéro.
+     *
+     * @param event
+     */
     public void actionTFNumero(KeyEvent event) {
 
         String ressource = "FXMLPopup.fxml";
@@ -1097,6 +1188,11 @@ public class FXMLController extends Main implements Initializable {
         }
     }
 
+    /**
+     * Méthode appelant actionTF pour un nom.
+     *
+     * @param event
+     */
     public void actionTFnom(KeyEvent event) {
         if (nom.getLength() > 0) {
             if (type.getValue().equalsIgnoreCase("docteur")) {
@@ -1114,6 +1210,11 @@ public class FXMLController extends Main implements Initializable {
         }
     }
 
+    /**
+     * Méthode appelant actionTF pour un prénom.
+     *
+     * @param event
+     */
     public void actionTFPrenom(KeyEvent event) {
         if (prenom.getLength() > 0) {
             if (type.getValue().equalsIgnoreCase("docteur")) {
@@ -1132,7 +1233,6 @@ public class FXMLController extends Main implements Initializable {
     }
 
     public void requete(Personne personne) {
-        //System.out.println("requete");
 
         String typeSelect = personne.getClass().getName().substring(8).toLowerCase();
         System.out.println(typeSelect);
@@ -1160,7 +1260,6 @@ public class FXMLController extends Main implements Initializable {
                     requete += malade.getNumero() + "'\n";
                     break;
             }
-            //System.out.println(requete);
         }
         if (nom.getLength() > 0) {
             requete += " AND " + typeRequete + ".nom LIKE '";
@@ -1175,7 +1274,6 @@ public class FXMLController extends Main implements Initializable {
                     requete += malade.getNom() + "%'\n";
                     break;
             }
-            //System.out.println(requete);
         }
         if (prenom.getLength() > 0) {
             requete += " AND " + typeRequete + ".prenom LIKE '";
@@ -1190,7 +1288,6 @@ public class FXMLController extends Main implements Initializable {
                     requete += malade.getPrenom() + "%'\n";
                     break;
             }
-            //System.out.println(requete);
         }
         if (typeSelect.equalsIgnoreCase("docteur") && docteur.getSpecialite() != null) {
             requete += "AND docteur.specialite ='" + docteur.getSpecialite() + "'\n";
@@ -1208,10 +1305,6 @@ public class FXMLController extends Main implements Initializable {
             requete += "AND malade.no_malade = hospitalisation.no_malade\n"
                     + "AND hospitalisation.no_chambre ='" + hospitalisation.getNo_chambre() + "'\n";
         }
-        /*if (typeSelect.equalsIgnoreCase("malade") && hospitalisation.getNo_chambre() != null) {
-         requete += "AND malade.no_malade = hospitalisation.no_malade\n"
-         + "AND hospitalisation.no_chambre ='" + hospitalisation.getNo_chambre() + "'\n";
-         }*/
         if (typeSelect.equalsIgnoreCase("malade") && hospitalisation.getDateE() != null) {
             requete += "AND malade.no_malade = hospitalisation.no_malade\n"
                     + "AND hospitalisation.date_entree ='" + hospitalisation.getDateE() + "'\n";
@@ -1241,6 +1334,9 @@ public class FXMLController extends Main implements Initializable {
         }
     }
 
+    /**
+     * Initialise le graphique de moyenne des salaires par rotation.
+     */
     public void initGraph1() {
         requete = "SELECT AVG(salaire) FROM infirmier WHERE rotation LIKE 'JOUR'";
 
@@ -1261,6 +1357,9 @@ public class FXMLController extends Main implements Initializable {
         countInfNuit = Float.parseFloat(liste.get(0).substring(0, liste.get(0).length() - 1));
     }
 
+    /**
+     * Initialise le graphique de moyenne des salaires par service.
+     */
     public void initGraph2() {
         requete = "SELECT AVG(salaire) FROM infirmier WHERE code_service LIKE 'REA'";
         try {
@@ -1285,6 +1384,9 @@ public class FXMLController extends Main implements Initializable {
         countInfCar = Float.parseFloat(liste.get(0).substring(0, liste.get(0).length() - 1));
     }
 
+    /**
+     * Initialise le graphique de nombre de patients par service.
+     */
     public void initGraph3() {
         requete = "SELECT COUNT(DISTINCT no_malade) FROM hospitalisation WHERE code_service LIKE 'CAR'";
         try {
@@ -1309,6 +1411,9 @@ public class FXMLController extends Main implements Initializable {
         countRea = Integer.parseInt(liste.get(0).substring(0, liste.get(0).length() - 1));
     }
 
+    /**
+     * Initialise le graphique de nombre de chambres par service.
+     */
     public void initGraph4() {
         requete = "SELECT COUNT(no_chambre) FROM hospitalisation WHERE code_service LIKE 'CAR'";
         try {
@@ -1334,7 +1439,7 @@ public class FXMLController extends Main implements Initializable {
     }
 
     /**
-     * La méthode qui est lancée au démarrage de l'application JavaFX.
+     * Méthode permettant de connaître le salaire moyen des infirmiers.
      */
     private Chart moySalInf() {
         graph.getData().clear();
@@ -1348,6 +1453,12 @@ public class FXMLController extends Main implements Initializable {
         return graph;
     }
 
+    /**
+     * Méthode permettant de connaître le salaire moyen des infirmier par
+     * service (utilisé pour le reporting).
+     *
+     * @return
+     */
     private Chart moySalInfServ() {
         graph.getData().clear();
         System.out.println(countInfJour);
@@ -1361,11 +1472,16 @@ public class FXMLController extends Main implements Initializable {
         return graph;
     }
 
+    /**
+     * Méthode permettant de connaître le nombre de patients par service.
+     *
+     * @return
+     */
     private Chart patParServ() {
 
         graph.getData().clear();
         XYChart.Series<String, Number> serie = new XYChart.Series<>();
-        serie.setName("Nombre de patients par services");
+        serie.setName("Nombre de patients par service");
         serie.getData().add(new XYChart.Data<String, Number>("cardiologie", countCar));
         serie.getData().add(new XYChart.Data<String, Number>("chirurgie", countChg));
         serie.getData().add(new XYChart.Data<String, Number>("reanimation", countRea));
@@ -1373,6 +1489,9 @@ public class FXMLController extends Main implements Initializable {
         return graph;
     }
 
+    /**
+     * Méthode qui permet de connaître le nombre de chambre par service
+     */
     private Chart nbChambreParServ() {
         System.out.println(countCar);
         graph.getData().clear();
@@ -1385,8 +1504,12 @@ public class FXMLController extends Main implements Initializable {
         return graph;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Provient de stackoverflow.com Sous programme permettant de ne pas avoir ses identifiants Campus et base de donnée en clair dans le code
+    /**
+     * Provient de stackoverflow.com Sous programme permettant de ne pas avoir 
+     * ses identifiants Campus et base de donnée en clair dans le code.
+     * @param code
+     * @return 
+     */
     private String dechiffreur(String code) {
         StringBuilder codeClair = new StringBuilder("");
         for (int i = 0; i < code.length(); i += 2) {
@@ -1395,9 +1518,13 @@ public class FXMLController extends Main implements Initializable {
         }
         return codeClair.toString();
     }
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // Initialisation des actions des combobox
+    
+    /**
+     * Méthode se lancant automatiquement au lancement du programme
+     * Vérifie la connexion internet pour se connecter et se connecte en local le cas échéant.
+     * @param url
+     * @param rb 
+     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
@@ -1411,8 +1538,8 @@ public class FXMLController extends Main implements Initializable {
                     Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 System.out.println("bonjour");
-            maconnexion= new Connexion("avaj","root","root");
-                    System.out.println("connexion offline ok");
+                maconnexion = new Connexion("avaj", "root", "root");
+                System.out.println("connexion offline ok");
             }
         } catch (SQLException ex) {
             Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
@@ -1428,16 +1555,12 @@ public class FXMLController extends Main implements Initializable {
         gridMedecin1.setVisible(false);
         gridMalade1.setVisible(false);
         gridInfirmier1.setVisible(false);
-        //actionCBMedecin();
+        
         actionCBType(type, gridCommune, gridMedecin, gridMalade, gridInfirmier, dateEntree, dateSortie);
-        //actionTFnom();
 
-        ////////////////////////////////////////
         for (int i = 1; i <= 4; i++) {
             tabPane.getTabs().get(i).getContent().setDisable(true);
         }
-
-        //////////////////////////////////////
     }
 
 }

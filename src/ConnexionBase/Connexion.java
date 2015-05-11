@@ -57,12 +57,18 @@ public class Connexion {
             conn = DriverManager.getConnection(urlDatabase, loginDatabase, passwordDatabase);
 
             // création d'un ordre SQL (statement)
-            stmt = conn.createStatement();
-
-            
+            stmt = conn.createStatement();  
         }
     }
     
+    /**
+     * Méthode de connexion en local.
+     * @param url
+     * @param login
+     * @param password
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
     public Connexion(String url, String login, String password) throws SQLException, ClassNotFoundException {
         // chargement driver "com.mysql.jdbc.Driver"
         Class.forName("com.mysql.jdbc.Driver");
